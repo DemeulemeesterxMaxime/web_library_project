@@ -1,0 +1,16 @@
+services:
+  back:
+    build:
+      context: ./nest-api
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+
+  front:
+    build:
+      context: ./react-app
+      dockerfile: Dockerfile
+    depends_on:
+      - back
+    ports:
+      - "5173:80"

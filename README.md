@@ -1,16 +1,39 @@
 # m1-s1-2025 project
 
-## Getting started
-### Nest API
+## Démarrage avec Docker (front + back)
+
+### 1) Construire les images
 ```bash
-> cd nest-api
-> npm install
-> npm run start:dev
+docker compose build
 ```
 
-### React application
+### 2) Lancer les deux services
 ```bash
-> cd react-app
-> npm install
-> npm run dev
+docker compose up -d
+```
+
+- Front: http://localhost:5173
+- Back: http://localhost:3000
+
+### 3) Voir les logs avec préfixes `[front]` et `[back]`
+```bash
+./scripts/docker-logs.sh
+```
+
+Exemple de sortie:
+```text
+[front] : ...
+[back] : ...
+```
+
+### Commandes utiles
+
+Arrêter les services:
+```bash
+docker compose down
+```
+
+Relancer avec rebuild:
+```bash
+docker compose up -d --build
 ```
