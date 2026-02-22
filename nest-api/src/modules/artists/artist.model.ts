@@ -14,3 +14,10 @@ export type CreateArtistModel = {
 };
 
 export type UpdateArtistModel = Partial<CreateArtistModel>;
+
+export type ArtistStatsModel = {
+  artistId: ArtistId;
+  totalVinyls: number;
+  totalSales: number;
+  averageSalesByVinyl: number;
+};

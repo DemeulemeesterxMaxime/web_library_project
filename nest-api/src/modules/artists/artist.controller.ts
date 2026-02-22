@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto, UpdateArtistDto } from './artist.dto';
-import { ArtistModel } from './artist.model';
+import { ArtistModel, ArtistStatsModel } from './artist.model';
 
 @Controller('artists')
 export class ArtistController {
@@ -25,6 +25,13 @@ export class ArtistController {
     @Param('id') id: string,
   ): Promise<ArtistModel | undefined> {
     return this.artistService.getArtistById(id);
+  }
+
+  @Get(':id/stats')
+  public async getArtistStats(
+    @Param('id') id: string,
+  ): Promise<ArtistStatsModel | undefined> {
+    return this.artistService.getArtistStats(id);
   }
 
   @Post()

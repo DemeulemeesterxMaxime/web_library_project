@@ -93,9 +93,7 @@ export class VinylRepository {
   public async deleteVinyls(ids: string[]): Promise<void> {
     await this.dataSource.transaction(async (transactionalEntityManager) => {
       await Promise.all(
-        ids.map((id) =>
-          transactionalEntityManager.delete(VinylEntity, { id }),
-        ),
+        ids.map((id) => transactionalEntityManager.delete(VinylEntity, { id })),
       );
     });
   }

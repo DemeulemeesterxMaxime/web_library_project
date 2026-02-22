@@ -4,17 +4,35 @@ import {
   CreateVinylModel,
   FilterVinylsModel,
   UpdateVinylModel,
+  VinylWithSalesCountModel,
 } from './vinyl.model';
 import { VinylRepository } from './vinyl.repository';
+import { SaleService } from '../sales/sale.service';
 
 @Injectable()
 export class VinylService {
-  constructor(private readonly vinylRepository: VinylRepository) {}
+  constructor(
+    private readonly vinylRepository: VinylRepository,
+    private readonly saleService: SaleService,
+  ) {}
 
   public async getAllVinyls(
     input?: FilterVinylsModel,
-  ): Promise<[VinylModel[], number]> {
-    return this.vinylRepository.getAllVinyls(input);
+  ): Promise<[VinylWithSalesCountModel[], number]> {
+    const [vinyls, totalCount] = await this.vinylRepository.getAllVinyls(input);
+
+    const vinylsWithSalesCount = await Promise.all(
+      vinyls.map(async (vinyl) => {
+        const salesCount = await this.saleService.countSalesByVinylId(vinyl.id);
+
+        return {
+          ...vinyl,
+          salesCount,
+        };
+      }),
+    );
+
+    return [vinylsWithSalesCount, totalCount];
   }
 
   public async getVinylById(id: string): Promise<VinylModel | undefined> {

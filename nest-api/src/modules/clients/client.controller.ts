@@ -9,14 +9,14 @@ import {
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { CreateClientDto, UpdateClientDto } from './client.dto';
-import { ClientModel } from './client.model';
+import { ClientModel, ClientWithSalesCountModel } from './client.model';
 
 @Controller('clients')
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @Get()
-  public async getAllClients(): Promise<ClientModel[]> {
+  public async getAllClients(): Promise<ClientWithSalesCountModel[]> {
     return this.clientService.getAllClients();
   }
 

@@ -37,12 +37,16 @@ export class VinylController {
   }
 
   @Get(':id')
-  public async getVinyl(@Param('id') id: string): Promise<VinylModel | undefined> {
+  public async getVinyl(
+    @Param('id') id: string,
+  ): Promise<VinylModel | undefined> {
     return this.vinylService.getVinylById(id);
   }
 
   @Post()
-  public async createVinyl(@Body() createVinylDto: CreateVinylDto): Promise<VinylModel> {
+  public async createVinyl(
+    @Body() createVinylDto: CreateVinylDto,
+  ): Promise<VinylModel> {
     const vinylData: CreateVinylModel = {
       title: createVinylDto.title,
       artistId: createVinylDto.artistId as ArtistId,

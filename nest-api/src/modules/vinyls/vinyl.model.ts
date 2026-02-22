@@ -14,6 +14,10 @@ export type VinylModel = {
   photo: string | null;
 };
 
+export type VinylWithSalesCountModel = VinylModel & {
+  salesCount: number;
+};
+
 export type CreateVinylModel = {
   title: string;
   artistId: ArtistId;
@@ -31,5 +35,5 @@ export type FilterVinylsModel = {
 
 export type GetVinylsModel = {
   totalCount: number;
-  data: VinylModel[];
+  data: VinylWithSalesCountModel[];
 };

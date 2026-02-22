@@ -8,6 +8,10 @@ export type ClientModel = {
   photo: string | null;
 };
 
+export type ClientWithSalesCountModel = ClientModel & {
+  salesCount: number;
+};
+
 export type CreateClientModel = {
   firstName: string;
   lastName: string;

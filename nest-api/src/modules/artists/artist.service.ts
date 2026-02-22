@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ArtistModel, CreateArtistModel, UpdateArtistModel } from './artist.model';
+import {
+  ArtistModel,
+  ArtistStatsModel,
+  CreateArtistModel,
+  UpdateArtistModel,
+} from './artist.model';
 import { ArtistRepository } from './artist.repository';
 
 @Injectable()
@@ -32,5 +37,11 @@ export class ArtistService {
 
   public async deleteArtist(id: string): Promise<void> {
     await this.artistRepository.deleteArtist(id);
+  }
+
+  public async getArtistStats(
+    id: string,
+  ): Promise<ArtistStatsModel | undefined> {
+    return this.artistRepository.getArtistStats(id);
   }
 }

@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ClientModel, CreateClientModel, UpdateClientModel } from './client.model';
+import {
+  ClientModel,
+  CreateClientModel,
+  UpdateClientModel,
+} from './client.model';
 import { ClientEntity, ClientId } from './client.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

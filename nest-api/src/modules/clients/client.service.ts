@@ -1,13 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { ClientModel, CreateClientModel, UpdateClientModel } from './client.model';
+import {
+  ClientModel,
+  ClientWithSalesCountModel,
+  CreateClientModel,
+  UpdateClientModel,
+} from './client.model';
 import { ClientRepository } from './client.repository';
+import { SaleService } from '../sales/sale.service';
 
 @Injectable()
 export class ClientService {
-  constructor(private readonly clientRepository: ClientRepository) {}
+  constructor(
+    private readonly clientRepository: ClientRepository,
+    private readonly saleService: SaleService,
+  ) {}
 
-  public async getAllClients(): Promise<ClientModel[]> {
-    return this.clientRepository.getAllClients();
+  public async getAllClients(): Promise<ClientWithSalesCountModel[]> {
+    const clients = await this.clientRepository.getAllClients();
+
+    return Promise.all(
+      clients.map(async (client) => {
+        const salesCount = await this.saleService.countSalesByClientId(
+          client.id,
+        );
+
+        return {
+          ...client,
+          salesCount,
+        };
+      }),
+    );
   }
 
   public async getClientById(id: string): Promise<ClientModel | undefined> {

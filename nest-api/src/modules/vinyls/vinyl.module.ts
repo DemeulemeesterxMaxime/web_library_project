@@ -5,9 +5,10 @@ import { VinylRepository } from './vinyl.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { VinylEntity } from './vinyl.entity';
 import { ArtistEntity } from '../artists/artist.entity';
+import { SaleModule } from '../sales/sale.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([VinylEntity, ArtistEntity])],
+  imports: [TypeOrmModule.forFeature([VinylEntity, ArtistEntity]), SaleModule],
   controllers: [VinylController],
   providers: [VinylRepository, VinylService],
 })
