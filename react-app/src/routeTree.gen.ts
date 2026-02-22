@@ -9,15 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as BooksRouteImport } from './routes/books'
+import { Route as VinylsRouteImport } from './routes/vinyls'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BooksIndexRouteImport } from './routes/books/index'
-import { Route as BooksBookIdRouteImport } from './routes/books.$bookId'
+import { Route as VinylsIndexRouteImport } from './routes/vinyls/index'
+import { Route as VinylsVinylIdRouteImport } from './routes/vinyls.$vinylId'
 
-const BooksRoute = BooksRouteImport.update({
-  id: '/books',
-  path: '/books',
+const VinylsRoute = VinylsRouteImport.update({
+  id: '/vinyls',
+  path: '/vinyls',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -30,59 +30,59 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BooksIndexRoute = BooksIndexRouteImport.update({
+const VinylsIndexRoute = VinylsIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => BooksRoute,
+  getParentRoute: () => VinylsRoute,
 } as any)
-const BooksBookIdRoute = BooksBookIdRouteImport.update({
-  id: '/$bookId',
-  path: '/$bookId',
-  getParentRoute: () => BooksRoute,
+const VinylsVinylIdRoute = VinylsVinylIdRouteImport.update({
+  id: '/$vinylId',
+  path: '/$vinylId',
+  getParentRoute: () => VinylsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/books': typeof BooksRouteWithChildren
-  '/books/$bookId': typeof BooksBookIdRoute
-  '/books/': typeof BooksIndexRoute
+  '/vinyls': typeof VinylsRouteWithChildren
+  '/vinyls/$vinylId': typeof VinylsVinylIdRoute
+  '/vinyls/': typeof VinylsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/books/$bookId': typeof BooksBookIdRoute
-  '/books': typeof BooksIndexRoute
+  '/vinyls/$vinylId': typeof VinylsVinylIdRoute
+  '/vinyls': typeof VinylsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/books': typeof BooksRouteWithChildren
-  '/books/$bookId': typeof BooksBookIdRoute
-  '/books/': typeof BooksIndexRoute
+  '/vinyls': typeof VinylsRouteWithChildren
+  '/vinyls/$vinylId': typeof VinylsVinylIdRoute
+  '/vinyls/': typeof VinylsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/books' | '/books/$bookId' | '/books/'
+  fullPaths: '/' | '/about' | '/vinyls' | '/vinyls/$vinylId' | '/vinyls/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/books/$bookId' | '/books'
-  id: '__root__' | '/' | '/about' | '/books' | '/books/$bookId' | '/books/'
+  to: '/' | '/about' | '/vinyls/$vinylId' | '/vinyls'
+  id: '__root__' | '/' | '/about' | '/vinyls' | '/vinyls/$vinylId' | '/vinyls/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BooksRoute: typeof BooksRouteWithChildren
+  VinylsRoute: typeof VinylsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/books': {
-      id: '/books'
-      path: '/books'
-      fullPath: '/books'
-      preLoaderRoute: typeof BooksRouteImport
+    '/vinyls': {
+      id: '/vinyls'
+      path: '/vinyls'
+      fullPath: '/vinyls'
+      preLoaderRoute: typeof VinylsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -99,39 +99,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/books/': {
-      id: '/books/'
+    '/vinyls/': {
+      id: '/vinyls/'
       path: '/'
-      fullPath: '/books/'
-      preLoaderRoute: typeof BooksIndexRouteImport
-      parentRoute: typeof BooksRoute
+      fullPath: '/vinyls/'
+      preLoaderRoute: typeof VinylsIndexRouteImport
+      parentRoute: typeof VinylsRoute
     }
-    '/books/$bookId': {
-      id: '/books/$bookId'
-      path: '/$bookId'
-      fullPath: '/books/$bookId'
-      preLoaderRoute: typeof BooksBookIdRouteImport
-      parentRoute: typeof BooksRoute
+    '/vinyls/$vinylId': {
+      id: '/vinyls/$vinylId'
+      path: '/$vinylId'
+      fullPath: '/vinyls/$vinylId'
+      preLoaderRoute: typeof VinylsVinylIdRouteImport
+      parentRoute: typeof VinylsRoute
     }
   }
 }
 
-interface BooksRouteChildren {
-  BooksBookIdRoute: typeof BooksBookIdRoute
-  BooksIndexRoute: typeof BooksIndexRoute
+interface VinylsRouteChildren {
+  VinylsVinylIdRoute: typeof VinylsVinylIdRoute
+  VinylsIndexRoute: typeof VinylsIndexRoute
 }
 
-const BooksRouteChildren: BooksRouteChildren = {
-  BooksBookIdRoute: BooksBookIdRoute,
-  BooksIndexRoute: BooksIndexRoute,
+const VinylsRouteChildren: VinylsRouteChildren = {
+  VinylsVinylIdRoute: VinylsVinylIdRoute,
+  VinylsIndexRoute: VinylsIndexRoute,
 }
 
-const BooksRouteWithChildren = BooksRoute._addFileChildren(BooksRouteChildren)
+const VinylsRouteWithChildren =
+  VinylsRoute._addFileChildren(VinylsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BooksRoute: BooksRouteWithChildren,
+  VinylsRoute: VinylsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
