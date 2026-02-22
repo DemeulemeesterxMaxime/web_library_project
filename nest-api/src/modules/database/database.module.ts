@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthorEntity } from '../authors/author.entity';
-import { BookEntity } from '../books/entities/book.entity';
+import { ArtistEntity } from '../artists/artist.entity';
+import { VinylEntity } from '../vinyls/vinyl.entity';
+import { ClientEntity } from '../clients/client.entity';
+import { SaleEntity } from '../sales/sale.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db',
-      entities: [AuthorEntity, BookEntity],
+      entities: [ArtistEntity, VinylEntity, ClientEntity, SaleEntity],
       synchronize: true,
     }),
   ],
