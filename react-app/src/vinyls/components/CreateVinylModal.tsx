@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
-import type { CreateVinylModel } from '../VinylModel'
 import { Button, Input, Modal, Select, Space } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
+import type { CreateVinylModel } from '../VinylModel'
 import { useVinylArtistsProvider } from '../providers/useVinylArtistsProvider'
 
 interface CreateVinylModalProps {
   onCreate: (vinyl: CreateVinylModel) => void
 }
 
-export function CreateVinylModal({ onCreate }: CreateVinylModalProps): React.JSX.Element {
+export function CreateVinylModal({
+  onCreate,
+}: CreateVinylModalProps): React.JSX.Element {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [title, setTitle] = useState<string>('')
   const [yearReleased, setYearReleased] = useState<number>(0)
@@ -26,7 +28,7 @@ export function CreateVinylModal({ onCreate }: CreateVinylModalProps): React.JSX
     if (isOpen) {
       loadArtists()
     }
-  }, [isOpen])
+  }, [isOpen, loadArtists])
 
   return (
     <>
@@ -51,7 +53,7 @@ export function CreateVinylModal({ onCreate }: CreateVinylModalProps): React.JSX
           }
         }}
         okButtonProps={{
-          disabled: !artistId || !title?.length || !yearReleased,
+          disabled: !artistId || title.length === 0 || yearReleased === 0,
         }}
       >
         <Space direction="vertical" style={{ width: '100%' }}>
@@ -59,12 +61,12 @@ export function CreateVinylModal({ onCreate }: CreateVinylModalProps): React.JSX
             type="text"
             placeholder="Titre"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={event => setTitle(event.target.value)}
           />
           <Select
             style={{ width: '100%' }}
             placeholder="Artiste"
-            options={artists.map((artist) => ({
+            options={artists.map(artist => ({
               label: `${artist.firstName} ${artist.lastName}`,
               value: artist.id,
             }))}
@@ -74,7 +76,7 @@ export function CreateVinylModal({ onCreate }: CreateVinylModalProps): React.JSX
             type="number"
             placeholder="Année de sortie"
             value={yearReleased}
-            onChange={(e) => setYearReleased(Number(e.target.value))}
+            onChange={event => setYearReleased(Number(event.target.value))}
           />
         </Space>
       </Modal>

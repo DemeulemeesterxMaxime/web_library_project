@@ -8,7 +8,9 @@ type UseVinylDetailsProviderReturn = {
   loadVinyl: () => void
 }
 
-export function useVinylDetailsProvider(id: string): UseVinylDetailsProviderReturn {
+export function useVinylDetailsProvider(
+  id: string,
+): UseVinylDetailsProviderReturn {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [vinyl, setVinyl] = useState<VinylModel | null>(null)
 
@@ -16,7 +18,7 @@ export function useVinylDetailsProvider(id: string): UseVinylDetailsProviderRetu
     setIsLoading(true)
     httpClient
       .get<VinylModel>(`/vinyls/${id}`)
-      .then((response) => {
+      .then(response => {
         setVinyl(response.data)
       })
       .finally(() => {

@@ -1,9 +1,15 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import { Route as indexRoute } from './routes/index'
 import { Route as aboutRoute } from './routes/about'
 import { Route as vinylsRoute } from './routes/vinyls'
-import { Space, type MenuProps } from 'antd'
-import { CustomerServiceOutlined, HomeOutlined, InfoOutlined } from '@ant-design/icons'
+import { Breadcrumb, Space, type MenuProps } from 'antd'
+import {
+  CustomerServiceOutlined,
+  HomeOutlined,
+  InfoOutlined,
+  TeamOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 import Menu from 'antd/es/menu/menu'
 
 interface LayoutProps {
@@ -11,6 +17,43 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps): React.JSX.Element {
+  const pathname = useRouterState({
+    select: state => state.location.pathname,
+  })
+
+  const breadcrumbItems = pathname
+    .split('/')
+    .filter(segment => segment.length > 0)
+    .map((segment, index, segments) => {
+      const path = `/${segments.slice(0, index + 1).join('/')}`
+
+      if (segment === 'vinyls') {
+        return { title: <Link to="/vinyls">Vinyles</Link> }
+      }
+
+      if (segment === 'artists') {
+        return { title: <a href="/artists">Artistes</a> }
+      }
+
+      if (segment === 'clients') {
+        return { title: <a href="/clients">Clients</a> }
+      }
+
+      if (path.startsWith('/vinyls/')) {
+        return { title: `Vinyle ${segment}` }
+      }
+
+      if (path.startsWith('/artists/')) {
+        return { title: `Artiste ${segment}` }
+      }
+
+      if (path.startsWith('/clients/')) {
+        return { title: `Client ${segment}` }
+      }
+
+      return { title: segment }
+    })
+
   const items: Required<MenuProps>['items'] = [
     {
       label: <Link to={indexRoute.to}>Accueil</Link>,
@@ -23,6 +66,16 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
       icon: <CustomerServiceOutlined />,
     },
     {
+      label: <a href="/artists">Artistes</a>,
+      key: 'artists',
+      icon: <TeamOutlined />,
+    },
+    {
+      label: <a href="/clients">Clients</a>,
+      key: 'clients',
+      icon: <UserOutlined />,
+    },
+    {
       label: <Link to={aboutRoute.to}>À propos</Link>,
       key: 'about',
       icon: <InfoOutlined />,
@@ -30,25 +83,21 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
   ]
 
   return (
-    <Space
-      direction="vertical"
-      style={{
-        width: '100%',
-        height: '100vh',
-      }}
-    >
-      <div
-        style={{
-          textAlign: 'left',
-          width: '100%',
-          backgroundColor: '#0A0A0A',
-          color: '#E0E0E0',
-        }}
-      >
-        <h2 style={{ marginTop: '0' }}>Sillon</h2>
+    <Space direction="vertical" className="layout-shell">
+      <div className="layout-header">
+        <h2 className="layout-title">Sillon</h2>
         <Menu mode="horizontal" items={items} />
       </div>
-      <div style={{ width: '100%', overflowY: 'scroll' }}>{children}</div>
+      <div className="layout-content">
+        <Breadcrumb
+          className="layout-breadcrumb"
+          items={[
+            { title: <Link to={indexRoute.to}>Accueil</Link> },
+            ...breadcrumbItems,
+          ]}
+        />
+        {children}
+      </div>
     </Space>
   )
 }

@@ -14,7 +14,7 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
 
   useEffect(() => {
     loadVinyl()
-  }, [id])
+  }, [loadVinyl])
 
   if (isLoading) {
     return <Skeleton active />

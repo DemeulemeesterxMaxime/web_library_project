@@ -15,7 +15,11 @@ interface VinylListItemProps {
   onUpdate: (id: string, input: UpdateVinylModel) => void
 }
 
-export function VinylListItem({ vinyl, onDelete, onUpdate }: VinylListItemProps): React.JSX.Element {
+export function VinylListItem({
+  vinyl,
+  onDelete,
+  onUpdate,
+}: VinylListItemProps): React.JSX.Element {
   const [title, setTitle] = useState<string>(vinyl.title)
   const [isEditing, setIsEditing] = useState<boolean>(false)
 
@@ -44,7 +48,7 @@ export function VinylListItem({ vinyl, onDelete, onUpdate }: VinylListItemProps)
     >
       <Col span={12} style={{ margin: 'auto 0' }}>
         {isEditing ? (
-          <input value={title} onChange={(e) => setTitle(e.target.value)} />
+          <input value={title} onChange={e => setTitle(e.target.value)} />
         ) : (
           <Link
             to={'/vinyls/$vinylId'}

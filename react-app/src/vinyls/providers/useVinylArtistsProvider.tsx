@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { VinylModel } from '../VinylModel'
 import httpClient from '../../api/httpClient'
 
@@ -12,14 +12,14 @@ type UseVinylArtistsProviderReturn = {
 export function useVinylArtistsProvider(): UseVinylArtistsProviderReturn {
   const [artists, setArtists] = useState<ArtistModel[]>([])
 
-  function loadArtists(): void {
+  const loadArtists = useCallback((): void => {
     httpClient
       .get<ArtistModel[]>('/artists')
-      .then((response) => {
+      .then(response => {
         setArtists(response.data)
       })
-      .catch((err: unknown) => console.error(err))
-  }
+      .catch(() => undefined)
+  }, [])
 
   return { artists, loadArtists }
 }
