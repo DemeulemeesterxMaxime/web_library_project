@@ -1,5 +1,9 @@
-import { useState } from 'react'
-import type { VinylModel, CreateVinylModel, UpdateVinylModel } from '../VinylModel'
+import { useCallback, useEffect, useState } from 'react'
+import type {
+  CreateVinylModel,
+  UpdateVinylModel,
+  VinylModel,
+} from '../VinylModel'
 import httpClient from '../../api/httpClient'
 
 type UseVinylProviderReturn = {
@@ -13,41 +17,54 @@ type UseVinylProviderReturn = {
 export function useVinylProvider(): UseVinylProviderReturn {
   const [vinyls, setVinyls] = useState<VinylModel[]>([])
 
-  function loadVinyls(): void {
+  const loadVinyls = useCallback((): void => {
     httpClient
       .get<{ data: VinylModel[] }>('/vinyls')
-      .then((response) => {
+      .then(response => {
         setVinyls(response.data.data)
       })
-      .catch((err: unknown) => console.error(err))
-  }
+      .catch(() => undefined)
+  }, [])
 
-  function createVinyl(vinyl: CreateVinylModel): void {
-    httpClient
-      .post('/vinyls', vinyl)
-      .then(() => {
-        loadVinyls()
-      })
-      .catch((err: unknown) => console.error(err))
-  }
+  const createVinyl = useCallback(
+    (vinyl: CreateVinylModel): void => {
+      httpClient
+        .post('/vinyls', vinyl)
+        .then(() => {
+          loadVinyls()
+        })
+        .catch(() => undefined)
+    },
+    [loadVinyls],
+  )
 
-  function updateVinyl(id: string, input: UpdateVinylModel): void {
-    httpClient
-      .patch(`/vinyls/${id}`, input)
-      .then(() => {
-        loadVinyls()
-      })
-      .catch((err: unknown) => console.error(err))
-  }
+  const updateVinyl = useCallback(
+    (id: string, input: UpdateVinylModel): void => {
+      httpClient
+        .patch(`/vinyls/${id}`, input)
+        .then(() => {
+          loadVinyls()
+        })
+        .catch(() => undefined)
+    },
+    [loadVinyls],
+  )
 
-  function deleteVinyl(id: string): void {
-    httpClient
-      .delete(`/vinyls/${id}`)
-      .then(() => {
-        loadVinyls()
-      })
-      .catch((err: unknown) => console.error(err))
-  }
+  const deleteVinyl = useCallback(
+    (id: string): void => {
+      httpClient
+        .delete(`/vinyls/${id}`)
+        .then(() => {
+          loadVinyls()
+        })
+        .catch(() => undefined)
+    },
+    [loadVinyls],
+  )
+
+  useEffect(() => {
+    loadVinyls()
+  }, [loadVinyls])
 
   return { vinyls, loadVinyls, createVinyl, updateVinyl, deleteVinyl }
 }
