@@ -10,14 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VinylsRouteImport } from './routes/vinyls'
+import { Route as ArtistsRouteImport } from './routes/artists'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VinylsIndexRouteImport } from './routes/vinyls/index'
+import { Route as ArtistsIndexRouteImport } from './routes/artists/index'
 import { Route as VinylsVinylIdRouteImport } from './routes/vinyls.$vinylId'
+import { Route as ArtistsArtistIdRouteImport } from './routes/artists.$artistId'
 
 const VinylsRoute = VinylsRouteImport.update({
   id: '/vinyls',
   path: '/vinyls',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtistsRoute = ArtistsRouteImport.update({
+  id: '/artists',
+  path: '/artists',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -35,44 +43,86 @@ const VinylsIndexRoute = VinylsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => VinylsRoute,
 } as any)
+const ArtistsIndexRoute = ArtistsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ArtistsRoute,
+} as any)
 const VinylsVinylIdRoute = VinylsVinylIdRouteImport.update({
   id: '/$vinylId',
   path: '/$vinylId',
   getParentRoute: () => VinylsRoute,
 } as any)
+const ArtistsArtistIdRoute = ArtistsArtistIdRouteImport.update({
+  id: '/$artistId',
+  path: '/$artistId',
+  getParentRoute: () => ArtistsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/artists': typeof ArtistsRouteWithChildren
   '/vinyls': typeof VinylsRouteWithChildren
+  '/artists/$artistId': typeof ArtistsArtistIdRoute
   '/vinyls/$vinylId': typeof VinylsVinylIdRoute
+  '/artists/': typeof ArtistsIndexRoute
   '/vinyls/': typeof VinylsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/artists/$artistId': typeof ArtistsArtistIdRoute
   '/vinyls/$vinylId': typeof VinylsVinylIdRoute
+  '/artists': typeof ArtistsIndexRoute
   '/vinyls': typeof VinylsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/artists': typeof ArtistsRouteWithChildren
   '/vinyls': typeof VinylsRouteWithChildren
+  '/artists/$artistId': typeof ArtistsArtistIdRoute
   '/vinyls/$vinylId': typeof VinylsVinylIdRoute
+  '/artists/': typeof ArtistsIndexRoute
   '/vinyls/': typeof VinylsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/vinyls' | '/vinyls/$vinylId' | '/vinyls/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/artists'
+    | '/vinyls'
+    | '/artists/$artistId'
+    | '/vinyls/$vinylId'
+    | '/artists/'
+    | '/vinyls/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/vinyls/$vinylId' | '/vinyls'
-  id: '__root__' | '/' | '/about' | '/vinyls' | '/vinyls/$vinylId' | '/vinyls/'
+  to:
+    | '/'
+    | '/about'
+    | '/artists/$artistId'
+    | '/vinyls/$vinylId'
+    | '/artists'
+    | '/vinyls'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/artists'
+    | '/vinyls'
+    | '/artists/$artistId'
+    | '/vinyls/$vinylId'
+    | '/artists/'
+    | '/vinyls/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ArtistsRoute: typeof ArtistsRouteWithChildren
   VinylsRoute: typeof VinylsRouteWithChildren
 }
 
@@ -83,6 +133,13 @@ declare module '@tanstack/react-router' {
       path: '/vinyls'
       fullPath: '/vinyls'
       preLoaderRoute: typeof VinylsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artists': {
+      id: '/artists'
+      path: '/artists'
+      fullPath: '/artists'
+      preLoaderRoute: typeof ArtistsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -106,6 +163,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VinylsIndexRouteImport
       parentRoute: typeof VinylsRoute
     }
+    '/artists/': {
+      id: '/artists/'
+      path: '/'
+      fullPath: '/artists/'
+      preLoaderRoute: typeof ArtistsIndexRouteImport
+      parentRoute: typeof ArtistsRoute
+    }
     '/vinyls/$vinylId': {
       id: '/vinyls/$vinylId'
       path: '/$vinylId'
@@ -113,8 +177,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VinylsVinylIdRouteImport
       parentRoute: typeof VinylsRoute
     }
+    '/artists/$artistId': {
+      id: '/artists/$artistId'
+      path: '/$artistId'
+      fullPath: '/artists/$artistId'
+      preLoaderRoute: typeof ArtistsArtistIdRouteImport
+      parentRoute: typeof ArtistsRoute
+    }
   }
 }
+
+interface ArtistsRouteChildren {
+  ArtistsArtistIdRoute: typeof ArtistsArtistIdRoute
+  ArtistsIndexRoute: typeof ArtistsIndexRoute
+}
+
+const ArtistsRouteChildren: ArtistsRouteChildren = {
+  ArtistsArtistIdRoute: ArtistsArtistIdRoute,
+  ArtistsIndexRoute: ArtistsIndexRoute,
+}
+
+const ArtistsRouteWithChildren =
+  ArtistsRoute._addFileChildren(ArtistsRouteChildren)
 
 interface VinylsRouteChildren {
   VinylsVinylIdRoute: typeof VinylsVinylIdRoute
@@ -132,6 +216,7 @@ const VinylsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ArtistsRoute: ArtistsRouteWithChildren,
   VinylsRoute: VinylsRouteWithChildren,
 }
 export const routeTree = rootRouteImport

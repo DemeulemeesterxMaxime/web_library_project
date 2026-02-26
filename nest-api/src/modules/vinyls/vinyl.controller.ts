@@ -24,7 +24,8 @@ export class VinylController {
       : ['title', 'ASC'];
 
     const [vinyls, totalCount] = await this.vinylService.getAllVinyls({
-      ...input,
+      limit: input.limit ?? 100,
+      offset: input.offset ?? 0,
       sort: {
         [property]: direction,
       },
