@@ -1,4 +1,4 @@
-import { Skeleton, Space, Typography } from 'antd'
+import { Skeleton, Space, Tag, Typography } from 'antd'
 import { useVinylDetailsProvider } from '../providers/useVinylDetailsProvider'
 import { useEffect } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
@@ -23,10 +23,24 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
   return (
     <Space direction="vertical" style={{ textAlign: 'left', width: '95%' }}>
       <Link to={vinylsRoute.to}>
-        <ArrowLeftOutlined />
+        <ArrowLeftOutlined /> Retour aux vinyles
       </Link>
+      {vinyl?.photo && (
+        <img
+          src={vinyl.photo}
+          alt={vinyl.title}
+          style={{ width: '200px', borderRadius: '4px' }}
+        />
+      )}
       <Typography.Title level={1}>{vinyl?.title}</Typography.Title>
-      <Typography.Title level={3}>{vinyl?.yearReleased}</Typography.Title>
+      <Typography.Title level={4} style={{ margin: 0 }}>
+        {vinyl?.yearReleased}
+      </Typography.Title>
+      {vinyl?.artist && (
+        <Tag color="green">
+          {vinyl.artist.firstName} {vinyl.artist.lastName}
+        </Tag>
+      )}
     </Space>
   )
 }

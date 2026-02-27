@@ -3,6 +3,7 @@ export type VinylModel = {
   title: string
   yearReleased: number
   photo: string | null
+  salesCount?: number
   artist: {
     id: string
     firstName: string

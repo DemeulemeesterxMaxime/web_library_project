@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { VinylModel } from '../VinylModel'
 import httpClient from '../../api/httpClient'
 
@@ -14,7 +14,7 @@ export function useVinylDetailsProvider(
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [vinyl, setVinyl] = useState<VinylModel | null>(null)
 
-  function loadVinyl(): void {
+  const loadVinyl = useCallback((): void => {
     setIsLoading(true)
     httpClient
       .get<VinylModel>(`/vinyls/${id}`)
@@ -24,7 +24,7 @@ export function useVinylDetailsProvider(
       .finally(() => {
         setIsLoading(false)
       })
-  }
+  }, [id])
 
   return { isLoading, vinyl, loadVinyl }
 }

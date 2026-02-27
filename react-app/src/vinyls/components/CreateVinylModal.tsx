@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Input, Modal, Select, Space } from 'antd'
+import { Button, InputNumber, Modal, Select, Space, Input } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import type { CreateVinylModel } from '../VinylModel'
 import { useVinylArtistsProvider } from '../providers/useVinylArtistsProvider'
@@ -13,13 +13,13 @@ export function CreateVinylModal({
 }: CreateVinylModalProps): React.JSX.Element {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [title, setTitle] = useState<string>('')
-  const [yearReleased, setYearReleased] = useState<number>(0)
+  const [yearReleased, setYearReleased] = useState<number | null>(null)
   const [artistId, setArtistId] = useState<string | undefined>(undefined)
   const { artists, loadArtists } = useVinylArtistsProvider()
 
   function onClose(): void {
     setTitle('')
-    setYearReleased(0)
+    setYearReleased(null)
     setArtistId(undefined)
     setIsOpen(false)
   }
@@ -43,7 +43,7 @@ export function CreateVinylModal({
         open={isOpen}
         onCancel={onClose}
         onOk={() => {
-          if (artistId) {
+          if (artistId && yearReleased) {
             onCreate({
               title,
               yearReleased,
@@ -53,12 +53,12 @@ export function CreateVinylModal({
           }
         }}
         okButtonProps={{
-          disabled: !artistId || title.length === 0 || yearReleased === 0,
+          disabled: !artistId || title.length === 0 || !yearReleased,
         }}
+        title="Nouveau vinyle"
       >
         <Space direction="vertical" style={{ width: '100%' }}>
           <Input
-            type="text"
             placeholder="Titre"
             value={title}
             onChange={event => setTitle(event.target.value)}
@@ -72,11 +72,13 @@ export function CreateVinylModal({
             }))}
             onChange={(value: string) => setArtistId(value)}
           />
-          <Input
-            type="number"
+          <InputNumber
+            style={{ width: '100%' }}
             placeholder="Année de sortie"
+            min={1900}
+            max={2100}
             value={yearReleased}
-            onChange={event => setYearReleased(Number(event.target.value))}
+            onChange={(value: number | null) => setYearReleased(value)}
           />
         </Space>
       </Modal>
