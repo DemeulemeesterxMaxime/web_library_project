@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { Route as vinylsRoute } from '../../routes/vinyls'
+import { PurchaseModal } from '../../components/PurchaseModal'
 
 interface VinylDetailsProps {
   id: string
@@ -41,6 +42,7 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
           {vinyl.artist.firstName} {vinyl.artist.lastName}
         </Tag>
       )}
+      <PurchaseModal vinylId={id} />
     </Space>
   )
 }

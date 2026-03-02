@@ -26,6 +26,10 @@ export function useArtistDetailsProvider(
         setArtist(artistResponse.data)
         setStats(statsResponse.data)
       })
+      .catch(() => {
+        setArtist(null)
+        setStats(null)
+      })
       .finally(() => {
         setIsLoading(false)
       })

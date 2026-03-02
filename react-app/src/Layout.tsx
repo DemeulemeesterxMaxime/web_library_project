@@ -2,6 +2,8 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { Route as indexRoute } from './routes/index'
 import { Route as aboutRoute } from './routes/about'
 import { Route as vinylsRoute } from './routes/vinyls'
+import { Route as artistsRoute } from './routes/artists'
+import { Route as clientsRoute } from './routes/clients'
 import { Breadcrumb, Space, type MenuProps } from 'antd'
 import {
   CustomerServiceOutlined,
@@ -32,11 +34,11 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
       }
 
       if (segment === 'artists') {
-        return { title: <a href="/artists">Artistes</a> }
+        return { title: <Link to={artistsRoute.to}>Artistes</Link> }
       }
 
       if (segment === 'clients') {
-        return { title: <a href="/clients">Clients</a> }
+        return { title: <Link to={clientsRoute.to}>Clients</Link> }
       }
 
       if (path.startsWith('/vinyls/')) {
@@ -66,12 +68,12 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
       icon: <CustomerServiceOutlined />,
     },
     {
-      label: <a href="/artists">Artistes</a>,
+      label: <Link to={artistsRoute.to}>Artistes</Link>,
       key: 'artists',
       icon: <TeamOutlined />,
     },
     {
-      label: <a href="/clients">Clients</a>,
+      label: <Link to={clientsRoute.to}>Clients</Link>,
       key: 'clients',
       icon: <UserOutlined />,
     },
