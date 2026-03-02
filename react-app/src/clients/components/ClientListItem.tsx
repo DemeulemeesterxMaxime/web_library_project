@@ -54,6 +54,7 @@ export function ClientListItem({
           padding: '.25rem',
           display: 'flex',
           justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
         <Col span={14} style={{ margin: 'auto 0' }}>
