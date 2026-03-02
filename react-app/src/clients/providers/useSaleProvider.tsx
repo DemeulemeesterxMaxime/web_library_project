@@ -1,34 +1,18 @@
-import { useCallback, useState } from 'react'
-import type { ClientModel } from '../ClientModel'
+import { useCallback } from 'react'
+import type { CreateSaleModel } from '../ClientModel'
 import httpClient from '../../api/httpClient'
 
 type UseSaleProviderReturn = {
-  clients: ClientModel[]
-  loadClients: () => void
-  createSale: (clientId: string, vinylId: string, date: string) => void
+  createSale: (sale: CreateSaleModel) => Promise<void>
 }
 
 export function useSaleProvider(): UseSaleProviderReturn {
-  const [clients, setClients] = useState<ClientModel[]>([])
-
-  const loadClients = useCallback((): void => {
-    httpClient
-      .get<ClientModel[]>('/clients')
-      .then(response => {
-        setClients(response.data)
-      })
-      .catch(() => undefined)
-  }, [])
-
   const createSale = useCallback(
-    (clientId: string, vinylId: string, date: string): void => {
-      httpClient
-        .post('/sales', { clientId, vinylId, date })
-        .then(() => undefined)
-        .catch(() => undefined)
+    async (sale: CreateSaleModel): Promise<void> => {
+      await httpClient.post('/sales', sale)
     },
     [],
   )
 
-  return { clients, loadClients, createSale }
+  return { createSale }
 }

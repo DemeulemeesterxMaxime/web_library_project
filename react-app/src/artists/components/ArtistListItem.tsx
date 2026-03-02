@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import type { ArtistModel, UpdateArtistModel } from '../ArtistModel'
-import { Button, Col, Modal, Row } from 'antd'
+import { Button, Col, Modal, Row, Tag } from 'antd'
 import {
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
   EditOutlined,
+  CustomerServiceOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 
@@ -55,7 +56,7 @@ export function ArtistListItem({
           justifyContent: 'space-between',
         }}
       >
-        <Col span={18} style={{ margin: 'auto 0' }}>
+        <Col span={14} style={{ margin: 'auto 0' }}>
           {isEditing ? (
             <span style={{ display: 'flex', gap: '.5rem' }}>
               <input
@@ -79,6 +80,13 @@ export function ArtistListItem({
                 {artist.firstName} {artist.lastName}
               </span>
             </Link>
+          )}
+        </Col>
+        <Col span={4} style={{ margin: 'auto 0' }}>
+          {artist.vinylCount !== undefined && (
+            <Tag icon={<CustomerServiceOutlined />} color="green">
+              {artist.vinylCount}
+            </Tag>
           )}
         </Col>
         <Col

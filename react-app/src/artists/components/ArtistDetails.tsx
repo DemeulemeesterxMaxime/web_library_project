@@ -1,19 +1,67 @@
-import { useEffect } from 'react'
-import { Skeleton, Space, Statistic, Typography } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { useEffect, useState } from 'react'
+import {
+  Button,
+  Input,
+  List,
+  Skeleton,
+  Space,
+  Statistic,
+  Typography,
+} from 'antd'
+import {
+  ArrowLeftOutlined,
+  CheckOutlined,
+  CloseOutlined,
+  EditOutlined,
+} from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { useArtistDetailsProvider } from '../providers/useArtistDetailsProvider'
+import httpClient from '../../api/httpClient'
+import type { UpdateArtistModel } from '../ArtistModel'
 
 interface ArtistDetailsProps {
   id: string
 }
 
 export function ArtistDetails({ id }: ArtistDetailsProps): React.JSX.Element {
-  const { isLoading, artist, stats, loadArtist } = useArtistDetailsProvider(id)
+  const { isLoading, artist, stats, vinyls, loadArtist } =
+    useArtistDetailsProvider(id)
+  const [isEditing, setIsEditing] = useState<boolean>(false)
+  const [editFirstName, setEditFirstName] = useState<string>('')
+  const [editLastName, setEditLastName] = useState<string>('')
+  const [editPhoto, setEditPhoto] = useState<string>('')
 
   useEffect(() => {
     loadArtist()
   }, [loadArtist])
+
+  function startEditing(): void {
+    if (artist) {
+      setEditFirstName(artist.firstName)
+      setEditLastName(artist.lastName)
+      setEditPhoto(artist.photo ?? '')
+      setIsEditing(true)
+    }
+  }
+
+  function cancelEditing(): void {
+    setIsEditing(false)
+  }
+
+  function saveEditing(): void {
+    const updateData: UpdateArtistModel = {
+      firstName: editFirstName,
+      lastName: editLastName,
+      ...(editPhoto.length > 0 ? { photo: editPhoto } : {}),
+    }
+    httpClient
+      .patch(`/artists/${id}`, updateData)
+      .then(() => {
+        setIsEditing(false)
+        loadArtist()
+      })
+      .catch(() => undefined)
+  }
 
   if (isLoading) {
     return <Skeleton active />
@@ -31,9 +79,45 @@ export function ArtistDetails({ id }: ArtistDetailsProps): React.JSX.Element {
           style={{ width: '200px', borderRadius: '4px' }}
         />
       )}
-      <Typography.Title level={1}>
-        {artist?.firstName} {artist?.lastName}
-      </Typography.Title>
+      {isEditing ? (
+        <Space direction="vertical" style={{ width: '100%' }}>
+          <Input
+            value={editFirstName}
+            onChange={e => setEditFirstName(e.target.value)}
+            placeholder="Prénom"
+          />
+          <Input
+            value={editLastName}
+            onChange={e => setEditLastName(e.target.value)}
+            placeholder="Nom"
+          />
+          <Input
+            value={editPhoto}
+            onChange={e => setEditPhoto(e.target.value)}
+            placeholder="URL photo (optionnel)"
+          />
+          <Space>
+            <Button
+              type="primary"
+              icon={<CheckOutlined />}
+              onClick={saveEditing}
+              disabled={editFirstName.length === 0 || editLastName.length === 0}
+            >
+              Sauvegarder
+            </Button>
+            <Button icon={<CloseOutlined />} onClick={cancelEditing}>
+              Annuler
+            </Button>
+          </Space>
+        </Space>
+      ) : (
+        <Space align="center">
+          <Typography.Title level={1} style={{ margin: 0 }}>
+            {artist?.firstName} {artist?.lastName}
+          </Typography.Title>
+          <Button type="text" icon={<EditOutlined />} onClick={startEditing} />
+        </Space>
+      )}
       {stats && (
         <Space>
           <Statistic title="Vinyles" value={stats.totalVinyls} />
@@ -43,6 +127,28 @@ export function ArtistDetails({ id }: ArtistDetailsProps): React.JSX.Element {
             value={stats.averageSalesByVinyl.toFixed(1)}
           />
         </Space>
+      )}
+      <Typography.Title level={3} style={{ marginTop: '1.5rem' }}>
+        Vinyles
+      </Typography.Title>
+      {vinyls.length === 0 ? (
+        <Typography.Text type="secondary">
+          Aucun vinyle enregistré.
+        </Typography.Text>
+      ) : (
+        <List
+          dataSource={vinyls}
+          renderItem={vinyl => (
+            <List.Item>
+              <Link to="/vinyls/$vinylId" params={{ vinylId: vinyl.id }}>
+                {vinyl.title}
+              </Link>
+              <Typography.Text type="secondary" style={{ marginLeft: '1rem' }}>
+                {vinyl.yearReleased}
+              </Typography.Text>
+            </List.Item>
+          )}
+        />
       )}
     </Space>
   )

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   ArtistModel,
   ArtistStatsModel,
+  ArtistWithVinylCountModel,
   CreateArtistModel,
   UpdateArtistModel,
 } from './artist.model';
@@ -11,8 +12,17 @@ import { ArtistRepository } from './artist.repository';
 export class ArtistService {
   constructor(private readonly artistRepository: ArtistRepository) {}
 
-  public async getAllArtists(): Promise<ArtistModel[]> {
-    return this.artistRepository.getAllArtists();
+  public async getAllArtists(): Promise<ArtistWithVinylCountModel[]> {
+    const artists = await this.artistRepository.getAllArtists();
+    const artistsWithCount = await Promise.all(
+      artists.map(async (artist) => {
+        const vinylCount = await this.artistRepository.countVinylsByArtistId(
+          artist.id,
+        );
+        return { ...artist, vinylCount };
+      }),
+    );
+    return artistsWithCount;
   }
 
   public async getArtistById(id: string): Promise<ArtistModel | undefined> {

@@ -26,6 +26,12 @@ export class ArtistRepository {
     return this.artistRepository.find();
   }
 
+  public async countVinylsByArtistId(artistId: string): Promise<number> {
+    return this.vinylRepository.count({
+      where: { artistId: artistId as ArtistId },
+    });
+  }
+
   public async getArtistById(id: string): Promise<ArtistModel | undefined> {
     const artist = await this.artistRepository.findOne({
       where: { id: id as ArtistId },

@@ -1,81 +1,78 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button, DatePicker, Modal, Select, Space } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
+import dayjs from 'dayjs'
+import { useClientProvider } from '../clients/providers/useClientProvider'
 import { useSaleProvider } from '../clients/providers/useSaleProvider'
-import type { Dayjs } from 'dayjs'
 
 interface PurchaseModalProps {
   vinylId: string
-  onSaleCreated?: () => void
+  onSaleCreated: () => void
 }
 
 export function PurchaseModal({
   vinylId,
   onSaleCreated,
 }: PurchaseModalProps): React.JSX.Element {
-  const { clients, loadClients, createSale } = useSaleProvider()
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null)
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null)
-
-  useEffect(() => {
-    if (isOpen) {
-      loadClients()
-    }
-  }, [isOpen, loadClients])
+  const [selectedDate, setSelectedDate] = useState<dayjs.Dayjs | null>(dayjs())
+  const { clients } = useClientProvider()
+  const { createSale } = useSaleProvider()
 
   function onClose(): void {
     setSelectedClientId(null)
-    setSelectedDate(null)
+    setSelectedDate(dayjs())
     setIsOpen(false)
   }
 
-  function onConfirm(): void {
+  function handleOk(): void {
     if (selectedClientId && selectedDate) {
-      createSale(selectedClientId, vinylId, selectedDate.toISOString())
-      if (onSaleCreated) {
-        onSaleCreated()
-      }
-      onClose()
+      createSale({
+        clientId: selectedClientId,
+        vinylId,
+        date: selectedDate.toISOString(),
+      })
+        .then(() => {
+          onSaleCreated()
+          onClose()
+        })
+        .catch(() => undefined)
     }
   }
 
+  const clientOptions = clients.map(client => ({
+    label: `${client.firstName} ${client.lastName}`,
+    value: client.id,
+  }))
+
   return (
     <>
-      <Button
-        icon={<ShoppingCartOutlined />}
-        type="primary"
-        onClick={() => setIsOpen(true)}
-      >
-        Enregistrer une vente
+      <Button icon={<ShoppingCartOutlined />} onClick={() => setIsOpen(true)}>
+        Enregistrer un achat
       </Button>
       <Modal
         open={isOpen}
         onCancel={onClose}
-        onOk={onConfirm}
+        onOk={handleOk}
         okButtonProps={{
           disabled: selectedClientId === null || selectedDate === null,
         }}
-        title="Enregistrer une vente"
-        okText="Confirmer"
-        cancelText="Annuler"
+        title="Enregistrer un achat"
       >
         <Space direction="vertical" style={{ width: '100%' }}>
           <Select
-            placeholder="Sélectionner un client"
             style={{ width: '100%' }}
+            placeholder="Sélectionner un client"
+            options={clientOptions}
             value={selectedClientId}
             onChange={(value: string) => setSelectedClientId(value)}
-            options={clients.map(client => ({
-              label: `${client.firstName} ${client.lastName}`,
-              value: client.id,
-            }))}
           />
           <DatePicker
             style={{ width: '100%' }}
-            placeholder="Date d'achat"
             value={selectedDate}
-            onChange={(date: Dayjs | null) => setSelectedDate(date)}
+            onChange={(date: dayjs.Dayjs | null) => setSelectedDate(date)}
+            format="DD/MM/YYYY"
           />
         </Space>
       </Modal>

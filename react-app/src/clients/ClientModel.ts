@@ -27,6 +27,10 @@ export type SaleModel = {
   }
   vinyl: {
     title: string
+    artist: {
+      firstName: string
+      lastName: string
+    }
   }
 }
 

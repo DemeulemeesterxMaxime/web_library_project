@@ -6,7 +6,7 @@ import {
   CloseOutlined,
   DeleteOutlined,
   EditOutlined,
-  ShoppingCartOutlined,
+  ShoppingOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 
@@ -80,51 +80,42 @@ export function ClientListItem({
               <span style={{ fontWeight: 'bold' }}>
                 {client.firstName} {client.lastName}
               </span>
-              {client.email && (
-                <span style={{ color: '#888888', marginLeft: '.5rem' }}>
-                  {client.email}
-                </span>
+              {client.salesCount !== undefined && client.salesCount > 0 && (
+                <Tag
+                  color="green"
+                  icon={<ShoppingOutlined />}
+                  style={{ marginLeft: '0.5rem' }}
+                >
+                  {client.salesCount}
+                </Tag>
               )}
             </Link>
           )}
         </Col>
-        <Col span={4} style={{ margin: 'auto 0' }}>
-          {client.salesCount !== undefined && (
-            <Tag icon={<ShoppingCartOutlined />} color="green">
-              {client.salesCount}
-            </Tag>
-          )}
-        </Col>
-        <Col
-          span={6}
-          style={{
-            display: 'flex',
-            gap: '.25rem',
-            margin: 'auto 0',
-            justifyContent: 'flex-end',
-          }}
-        >
+        <Col>
           {isEditing ? (
-            <>
+            <span style={{ display: 'flex', gap: '.5rem' }}>
               <Button type="primary" onClick={onValidateEdit}>
                 <CheckOutlined />
               </Button>
               <Button onClick={onCancelEdit}>
                 <CloseOutlined />
               </Button>
-            </>
+            </span>
           ) : (
-            <Button type="primary" onClick={() => setIsEditing(true)}>
-              <EditOutlined />
-            </Button>
+            <span style={{ display: 'flex', gap: '.5rem' }}>
+              <Button type="primary" onClick={() => setIsEditing(true)}>
+                <EditOutlined />
+              </Button>
+              <Button
+                type="primary"
+                danger
+                onClick={() => setIsDeleteModalOpen(true)}
+              >
+                <DeleteOutlined />
+              </Button>
+            </span>
           )}
-          <Button
-            type="primary"
-            danger
-            onClick={() => setIsDeleteModalOpen(true)}
-          >
-            <DeleteOutlined />
-          </Button>
         </Col>
       </Row>
       <Modal
@@ -133,14 +124,11 @@ export function ClientListItem({
         onCancel={() => setIsDeleteModalOpen(false)}
         title="Confirmer la suppression"
         okText="Supprimer"
-        okButtonProps={{ danger: true }}
         cancelText="Annuler"
+        okButtonProps={{ danger: true }}
       >
-        Êtes-vous sûr de vouloir supprimer{' '}
-        <strong>
-          {client.firstName} {client.lastName}
-        </strong>{' '}
-        ?
+        Êtes-vous sûr de vouloir supprimer le client « {client.firstName}{' '}
+        {client.lastName} » ?
       </Modal>
     </>
   )
