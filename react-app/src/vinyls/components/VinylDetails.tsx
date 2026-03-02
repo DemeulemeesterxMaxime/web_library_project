@@ -85,7 +85,9 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
         <Space direction="vertical" style={{ width: '100%' }}>
           <Input
             value={editTitle}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditTitle(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEditTitle(e.target.value)
+            }
             placeholder="Titre"
           />
           <InputNumber
@@ -98,7 +100,9 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
           />
           <Input
             value={editPhoto}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditPhoto(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEditPhoto(e.target.value)
+            }
             placeholder="URL photo (optionnel)"
           />
           <Space>

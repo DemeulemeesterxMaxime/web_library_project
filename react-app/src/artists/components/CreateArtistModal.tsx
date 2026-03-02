@@ -52,19 +52,25 @@ export function CreateArtistModal({
             type="text"
             placeholder="Prénom"
             value={firstName}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFirstName(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setFirstName(event.target.value)
+            }
           />
           <Input
             type="text"
             placeholder="Nom"
             value={lastName}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setLastName(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setLastName(event.target.value)
+            }
           />
           <Input
             type="text"
             placeholder="URL photo (optionnel)"
             value={photo}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPhoto(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setPhoto(event.target.value)
+            }
           />
         </Space>
       </Modal>

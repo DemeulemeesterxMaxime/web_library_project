@@ -77,22 +77,30 @@ export function ClientDetails({ id }: ClientDetailsProps): React.JSX.Element {
         <Space direction="vertical" style={{ width: '100%' }}>
           <Input
             value={editFirstName}
-            onChange={e => setEditFirstName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEditFirstName(e.target.value)
+            }
             placeholder="Prénom"
           />
           <Input
             value={editLastName}
-            onChange={e => setEditLastName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEditLastName(e.target.value)
+            }
             placeholder="Nom"
           />
           <Input
             value={editEmail}
-            onChange={e => setEditEmail(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEditEmail(e.target.value)
+            }
             placeholder="Email (optionnel)"
           />
           <Input
             value={editPhoto}
-            onChange={e => setEditPhoto(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEditPhoto(e.target.value)
+            }
             placeholder="URL photo (optionnel)"
           />
           <Space>

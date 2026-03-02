@@ -61,7 +61,9 @@ export function CreateVinylModal({
           <Input
             placeholder="Titre"
             value={title}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setTitle(event.target.value)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setTitle(event.target.value)
+            }
           />
           <Select
             style={{ width: '100%' }}

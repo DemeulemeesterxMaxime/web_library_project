@@ -57,7 +57,12 @@ export function VinylListItem({
       >
         <Col span={10} style={{ margin: 'auto 0' }}>
           {isEditing ? (
-            <input value={title} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)} />
+            <input
+              value={title}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setTitle(e.target.value)
+              }
+            />
           ) : (
             <Link
               to={'/vinyls/$vinylId'}
