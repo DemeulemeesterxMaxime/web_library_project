@@ -1,18 +1,21 @@
-.home-links {
-  margin-top: 1.25rem;
+.catalog-toolbar {
   display: flex;
   gap: 1rem;
+  align-items: center;
   flex-wrap: wrap;
+  margin-bottom: 1.5rem;
 }
 
-.home-link {
-  padding: 0.65rem 1rem;
-  border: 1px solid #2a2a2a;
-  border-radius: 2px;
-  background-color: #1a1a1a;
+.catalog-grid {
+  margin-top: 0.5rem;
 }
 
-.home-link:hover {
-  border-color: #39ff14;
-  box-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
+.catalog-card {
+  height: 100%;
+  transition: all 0.2s ease;
+}
+
+.catalog-card:hover {
+  border-color: #39ff14 !important;
+  box-shadow: 0 0 12px rgba(57, 255, 20, 0.25);
 }
