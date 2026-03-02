@@ -61,12 +61,16 @@ export function ArtistListItem({
             <span style={{ display: 'flex', gap: '.5rem' }}>
               <input
                 value={firstName}
-                onChange={e => setFirstName(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFirstName(e.target.value)
+                }
                 placeholder="Prénom"
               />
               <input
                 value={lastName}
-                onChange={e => setLastName(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setLastName(e.target.value)
+                }
                 placeholder="Nom"
               />
             </span>
