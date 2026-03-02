@@ -10,17 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VinylsRouteImport } from './routes/vinyls'
+import { Route as ClientsRouteImport } from './routes/clients'
 import { Route as ArtistsRouteImport } from './routes/artists'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VinylsIndexRouteImport } from './routes/vinyls/index'
+import { Route as ClientsIndexRouteImport } from './routes/clients/index'
 import { Route as ArtistsIndexRouteImport } from './routes/artists/index'
 import { Route as VinylsVinylIdRouteImport } from './routes/vinyls.$vinylId'
+import { Route as ClientsClientIdRouteImport } from './routes/clients.$clientId'
 import { Route as ArtistsArtistIdRouteImport } from './routes/artists.$artistId'
 
 const VinylsRoute = VinylsRouteImport.update({
   id: '/vinyls',
   path: '/vinyls',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClientsRoute = ClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArtistsRoute = ArtistsRouteImport.update({
@@ -43,6 +51,11 @@ const VinylsIndexRoute = VinylsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => VinylsRoute,
 } as any)
+const ClientsIndexRoute = ClientsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ClientsRoute,
+} as any)
 const ArtistsIndexRoute = ArtistsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -52,6 +65,11 @@ const VinylsVinylIdRoute = VinylsVinylIdRouteImport.update({
   id: '/$vinylId',
   path: '/$vinylId',
   getParentRoute: () => VinylsRoute,
+} as any)
+const ClientsClientIdRoute = ClientsClientIdRouteImport.update({
+  id: '/$clientId',
+  path: '/$clientId',
+  getParentRoute: () => ClientsRoute,
 } as any)
 const ArtistsArtistIdRoute = ArtistsArtistIdRouteImport.update({
   id: '/$artistId',
@@ -63,18 +81,23 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/artists': typeof ArtistsRouteWithChildren
+  '/clients': typeof ClientsRouteWithChildren
   '/vinyls': typeof VinylsRouteWithChildren
   '/artists/$artistId': typeof ArtistsArtistIdRoute
+  '/clients/$clientId': typeof ClientsClientIdRoute
   '/vinyls/$vinylId': typeof VinylsVinylIdRoute
   '/artists/': typeof ArtistsIndexRoute
+  '/clients/': typeof ClientsIndexRoute
   '/vinyls/': typeof VinylsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/artists/$artistId': typeof ArtistsArtistIdRoute
+  '/clients/$clientId': typeof ClientsClientIdRoute
   '/vinyls/$vinylId': typeof VinylsVinylIdRoute
   '/artists': typeof ArtistsIndexRoute
+  '/clients': typeof ClientsIndexRoute
   '/vinyls': typeof VinylsIndexRoute
 }
 export interface FileRoutesById {
@@ -82,10 +105,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/artists': typeof ArtistsRouteWithChildren
+  '/clients': typeof ClientsRouteWithChildren
   '/vinyls': typeof VinylsRouteWithChildren
   '/artists/$artistId': typeof ArtistsArtistIdRoute
+  '/clients/$clientId': typeof ClientsClientIdRoute
   '/vinyls/$vinylId': typeof VinylsVinylIdRoute
   '/artists/': typeof ArtistsIndexRoute
+  '/clients/': typeof ClientsIndexRoute
   '/vinyls/': typeof VinylsIndexRoute
 }
 export interface FileRouteTypes {
@@ -94,28 +120,36 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/artists'
+    | '/clients'
     | '/vinyls'
     | '/artists/$artistId'
+    | '/clients/$clientId'
     | '/vinyls/$vinylId'
     | '/artists/'
+    | '/clients/'
     | '/vinyls/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/artists/$artistId'
+    | '/clients/$clientId'
     | '/vinyls/$vinylId'
     | '/artists'
+    | '/clients'
     | '/vinyls'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/artists'
+    | '/clients'
     | '/vinyls'
     | '/artists/$artistId'
+    | '/clients/$clientId'
     | '/vinyls/$vinylId'
     | '/artists/'
+    | '/clients/'
     | '/vinyls/'
   fileRoutesById: FileRoutesById
 }
@@ -123,6 +157,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ArtistsRoute: typeof ArtistsRouteWithChildren
+  ClientsRoute: typeof ClientsRouteWithChildren
   VinylsRoute: typeof VinylsRouteWithChildren
 }
 
@@ -133,6 +168,13 @@ declare module '@tanstack/react-router' {
       path: '/vinyls'
       fullPath: '/vinyls'
       preLoaderRoute: typeof VinylsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clients': {
+      id: '/clients'
+      path: '/clients'
+      fullPath: '/clients'
+      preLoaderRoute: typeof ClientsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/artists': {
@@ -163,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VinylsIndexRouteImport
       parentRoute: typeof VinylsRoute
     }
+    '/clients/': {
+      id: '/clients/'
+      path: '/'
+      fullPath: '/clients/'
+      preLoaderRoute: typeof ClientsIndexRouteImport
+      parentRoute: typeof ClientsRoute
+    }
     '/artists/': {
       id: '/artists/'
       path: '/'
@@ -176,6 +225,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/vinyls/$vinylId'
       preLoaderRoute: typeof VinylsVinylIdRouteImport
       parentRoute: typeof VinylsRoute
+    }
+    '/clients/$clientId': {
+      id: '/clients/$clientId'
+      path: '/$clientId'
+      fullPath: '/clients/$clientId'
+      preLoaderRoute: typeof ClientsClientIdRouteImport
+      parentRoute: typeof ClientsRoute
     }
     '/artists/$artistId': {
       id: '/artists/$artistId'
@@ -200,6 +256,19 @@ const ArtistsRouteChildren: ArtistsRouteChildren = {
 const ArtistsRouteWithChildren =
   ArtistsRoute._addFileChildren(ArtistsRouteChildren)
 
+interface ClientsRouteChildren {
+  ClientsClientIdRoute: typeof ClientsClientIdRoute
+  ClientsIndexRoute: typeof ClientsIndexRoute
+}
+
+const ClientsRouteChildren: ClientsRouteChildren = {
+  ClientsClientIdRoute: ClientsClientIdRoute,
+  ClientsIndexRoute: ClientsIndexRoute,
+}
+
+const ClientsRouteWithChildren =
+  ClientsRoute._addFileChildren(ClientsRouteChildren)
+
 interface VinylsRouteChildren {
   VinylsVinylIdRoute: typeof VinylsVinylIdRoute
   VinylsIndexRoute: typeof VinylsIndexRoute
@@ -217,6 +286,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ArtistsRoute: ArtistsRouteWithChildren,
+  ClientsRoute: ClientsRouteWithChildren,
   VinylsRoute: VinylsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
