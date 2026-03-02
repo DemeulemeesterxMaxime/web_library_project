@@ -40,9 +40,7 @@ export function CatalogCard({
         borderRadius: '2px 2px 0 0',
       }}
     >
-      <CustomerServiceOutlined
-        style={{ fontSize: '3rem', color: '#2A2A2A' }}
-      />
+      <CustomerServiceOutlined style={{ fontSize: '3rem', color: '#2A2A2A' }} />
     </div>
   )
 

@@ -83,8 +83,7 @@ export function CatalogPage(): React.JSX.Element {
         Sillon
       </h1>
       <p style={{ color: '#888888', fontSize: '1rem', marginBottom: '1.5rem' }}>
-        Parcourez notre catalogue de vinyles et trouvez votre prochaine
-        pépite.
+        Parcourez notre catalogue de vinyles et trouvez votre prochaine pépite.
       </p>
 
       <div className="catalog-toolbar">
@@ -114,10 +113,7 @@ export function CatalogPage(): React.JSX.Element {
         <Row gutter={[16, 16]} className="catalog-grid">
           {sortedVinyls.map(vinyl => (
             <Col key={vinyl.id} xs={24} sm={12} md={8} lg={6}>
-              <CatalogCard
-                vinyl={vinyl}
-                onSaleCreated={() => loadVinyls()}
-              />
+              <CatalogCard vinyl={vinyl} onSaleCreated={() => loadVinyls()} />
             </Col>
           ))}
         </Row>
