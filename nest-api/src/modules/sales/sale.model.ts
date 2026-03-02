@@ -20,6 +20,10 @@ export type SaleWithDetailsModel = {
   };
   vinyl: {
     title: string;
+    artist: {
+      firstName: string;
+      lastName: string;
+    };
   };
 };
 

@@ -18,7 +18,7 @@ export class SaleRepository {
   ): Promise<SaleWithDetailsModel[]> {
     return this.saleRepository.find({
       where: { clientId: clientId as ClientId },
-      relations: { client: true, vinyl: true },
+      relations: { client: true, vinyl: { artist: true } },
     });
   }
 
@@ -27,13 +27,13 @@ export class SaleRepository {
   ): Promise<SaleWithDetailsModel[]> {
     return this.saleRepository.find({
       where: { vinylId: vinylId as VinylId },
-      relations: { client: true, vinyl: true },
+      relations: { client: true, vinyl: { artist: true } },
     });
   }
 
   public async getAllSales(): Promise<SaleWithDetailsModel[]> {
     return this.saleRepository.find({
-      relations: { client: true, vinyl: true },
+      relations: { client: true, vinyl: { artist: true } },
     });
   }
 
@@ -46,7 +46,7 @@ export class SaleRepository {
 
     const saleWithDetails = await this.saleRepository.findOne({
       where: { id: created.id },
-      relations: { client: true, vinyl: true },
+      relations: { client: true, vinyl: { artist: true } },
     });
 
     if (!saleWithDetails) {

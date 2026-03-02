@@ -1,10 +1,12 @@
 import { useCallback, useState } from 'react'
 import type { VinylModel } from '../VinylModel'
+import type { SaleModel } from '../../clients/ClientModel'
 import httpClient from '../../api/httpClient'
 
 type UseVinylDetailsProviderReturn = {
   isLoading: boolean
   vinyl: VinylModel | null
+  sales: SaleModel[]
   loadVinyl: () => void
 }
 
@@ -13,18 +15,26 @@ export function useVinylDetailsProvider(
 ): UseVinylDetailsProviderReturn {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [vinyl, setVinyl] = useState<VinylModel | null>(null)
+  const [sales, setSales] = useState<SaleModel[]>([])
 
   const loadVinyl = useCallback((): void => {
     setIsLoading(true)
-    httpClient
-      .get<VinylModel>(`/vinyls/${id}`)
-      .then(response => {
-        setVinyl(response.data)
+    Promise.all([
+      httpClient.get<VinylModel>(`/vinyls/${id}`),
+      httpClient.get<SaleModel[]>('/sales', { params: { vinylId: id } }),
+    ])
+      .then(([vinylResponse, salesResponse]) => {
+        setVinyl(vinylResponse.data)
+        setSales(salesResponse.data)
+      })
+      .catch(() => {
+        setVinyl(null)
+        setSales([])
       })
       .finally(() => {
         setIsLoading(false)
       })
   }, [id])
 
-  return { isLoading, vinyl, loadVinyl }
+  return { isLoading, vinyl, sales, loadVinyl }
 }

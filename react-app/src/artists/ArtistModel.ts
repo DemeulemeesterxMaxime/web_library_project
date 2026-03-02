@@ -3,6 +3,7 @@ export type ArtistModel = {
   firstName: string
   lastName: string
   photo: string | null
+  vinylCount?: number
 }
 
 export type ArtistStatsModel = {

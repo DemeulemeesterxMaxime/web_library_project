@@ -9,14 +9,18 @@ import {
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto, UpdateArtistDto } from './artist.dto';
-import { ArtistModel, ArtistStatsModel } from './artist.model';
+import {
+  ArtistModel,
+  ArtistStatsModel,
+  ArtistWithVinylCountModel,
+} from './artist.model';
 
 @Controller('artists')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Get()
-  public async getAllArtists(): Promise<ArtistModel[]> {
+  public async getAllArtists(): Promise<ArtistWithVinylCountModel[]> {
     return this.artistService.getAllArtists();
   }
 

@@ -1,4 +1,4 @@
-import { Link, useRouterState } from '@tanstack/react-router'
+import { Link, useMatches, useRouterState } from '@tanstack/react-router'
 import { Route as indexRoute } from './routes/index'
 import { Route as aboutRoute } from './routes/about'
 import { Route as vinylsRoute } from './routes/vinyls'
@@ -21,6 +21,15 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
     select: state => state.location.pathname,
   })
 
+  const matches = useMatches()
+  const lastMatch = matches[matches.length - 1]
+  const loaderTitle =
+    lastMatch?.loaderData &&
+    typeof lastMatch.loaderData === 'object' &&
+    'title' in lastMatch.loaderData
+      ? (lastMatch.loaderData as { title: string }).title
+      : undefined
+
   const breadcrumbItems = pathname
     .split('/')
     .filter(segment => segment.length > 0)
@@ -40,15 +49,15 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
       }
 
       if (path.startsWith('/vinyls/')) {
-        return { title: `Vinyle ${segment}` }
+        return { title: loaderTitle ?? segment }
       }
 
       if (path.startsWith('/artists/')) {
-        return { title: `Artiste ${segment}` }
+        return { title: loaderTitle ?? segment }
       }
 
       if (path.startsWith('/clients/')) {
-        return { title: `Client ${segment}` }
+        return { title: loaderTitle ?? segment }
       }
 
       return { title: segment }

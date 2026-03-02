@@ -1,15 +1,5 @@
-import {
-  Button,
-  Input,
-  InputNumber,
-  List,
-  Skeleton,
-  Space,
-  Tag,
-  Typography,
-} from 'antd'
-import { useVinylDetailsProvider } from '../providers/useVinylDetailsProvider'
 import { useEffect, useState } from 'react'
+import { Button, Input, List, Skeleton, Space, Typography } from 'antd'
 import {
   ArrowLeftOutlined,
   CheckOutlined,
@@ -17,31 +7,32 @@ import {
   EditOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
-import { Route as vinylsRoute } from '../../routes/vinyls'
-import { PurchaseModal } from '../../components/PurchaseModal'
+import { useClientDetailsProvider } from '../providers/useClientDetailsProvider'
 import httpClient from '../../api/httpClient'
-import type { UpdateVinylModel } from '../VinylModel'
+import type { UpdateClientModel } from '../ClientModel'
 
-interface VinylDetailsProps {
+interface ClientDetailsProps {
   id: string
 }
 
-export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
-  const { isLoading, vinyl, sales, loadVinyl } = useVinylDetailsProvider(id)
+export function ClientDetails({ id }: ClientDetailsProps): React.JSX.Element {
+  const { isLoading, client, sales, loadClient } = useClientDetailsProvider(id)
   const [isEditing, setIsEditing] = useState<boolean>(false)
-  const [editTitle, setEditTitle] = useState<string>('')
-  const [editYear, setEditYear] = useState<number | null>(null)
+  const [editFirstName, setEditFirstName] = useState<string>('')
+  const [editLastName, setEditLastName] = useState<string>('')
+  const [editEmail, setEditEmail] = useState<string>('')
   const [editPhoto, setEditPhoto] = useState<string>('')
 
   useEffect(() => {
-    loadVinyl()
-  }, [loadVinyl])
+    loadClient()
+  }, [loadClient])
 
   function startEditing(): void {
-    if (vinyl) {
-      setEditTitle(vinyl.title)
-      setEditYear(vinyl.yearReleased)
-      setEditPhoto(vinyl.photo ?? '')
+    if (client) {
+      setEditFirstName(client.firstName)
+      setEditLastName(client.lastName)
+      setEditEmail(client.email ?? '')
+      setEditPhoto(client.photo ?? '')
       setIsEditing(true)
     }
   }
@@ -51,16 +42,17 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
   }
 
   function saveEditing(): void {
-    const updateData: UpdateVinylModel = {
-      title: editTitle,
-      yearReleased: editYear ?? undefined,
+    const updateData: UpdateClientModel = {
+      firstName: editFirstName,
+      lastName: editLastName,
+      ...(editEmail.length > 0 ? { email: editEmail } : {}),
       ...(editPhoto.length > 0 ? { photo: editPhoto } : {}),
     }
     httpClient
-      .patch(`/vinyls/${id}`, updateData)
+      .patch(`/clients/${id}`, updateData)
       .then(() => {
         setIsEditing(false)
-        loadVinyl()
+        loadClient()
       })
       .catch(() => undefined)
   }
@@ -71,30 +63,32 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
 
   return (
     <Space direction="vertical" style={{ textAlign: 'left', width: '95%' }}>
-      <Link to={vinylsRoute.to}>
-        <ArrowLeftOutlined /> Retour aux vinyles
+      <Link to="/clients">
+        <ArrowLeftOutlined /> Retour aux clients
       </Link>
-      {vinyl?.photo && (
+      {client?.photo && (
         <img
-          src={vinyl.photo}
-          alt={vinyl.title}
+          src={client.photo}
+          alt={`${client.firstName} ${client.lastName}`}
           style={{ width: '200px', borderRadius: '4px' }}
         />
       )}
       {isEditing ? (
         <Space direction="vertical" style={{ width: '100%' }}>
           <Input
-            value={editTitle}
-            onChange={e => setEditTitle(e.target.value)}
-            placeholder="Titre"
+            value={editFirstName}
+            onChange={e => setEditFirstName(e.target.value)}
+            placeholder="Prénom"
           />
-          <InputNumber
-            style={{ width: '100%' }}
-            value={editYear}
-            onChange={(value: number | null) => setEditYear(value)}
-            min={1900}
-            max={2100}
-            placeholder="Année"
+          <Input
+            value={editLastName}
+            onChange={e => setEditLastName(e.target.value)}
+            placeholder="Nom"
+          />
+          <Input
+            value={editEmail}
+            onChange={e => setEditEmail(e.target.value)}
+            placeholder="Email (optionnel)"
           />
           <Input
             value={editPhoto}
@@ -106,7 +100,7 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
               type="primary"
               icon={<CheckOutlined />}
               onClick={saveEditing}
-              disabled={editTitle.length === 0 || editYear === null}
+              disabled={editFirstName.length === 0 || editLastName.length === 0}
             >
               Sauvegarder
             </Button>
@@ -119,7 +113,7 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
         <>
           <Space align="center">
             <Typography.Title level={1} style={{ margin: 0 }}>
-              {vinyl?.title}
+              {client?.firstName} {client?.lastName}
             </Typography.Title>
             <Button
               type="text"
@@ -127,21 +121,13 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
               onClick={startEditing}
             />
           </Space>
-          <Typography.Title level={4} style={{ margin: 0 }}>
-            {vinyl?.yearReleased}
-          </Typography.Title>
+          {client?.email && (
+            <Typography.Text type="secondary">{client.email}</Typography.Text>
+          )}
         </>
       )}
-      {vinyl?.artist && (
-        <Link to="/artists/$artistId" params={{ artistId: vinyl.artist.id }}>
-          <Tag color="green">
-            {vinyl.artist.firstName} {vinyl.artist.lastName}
-          </Tag>
-        </Link>
-      )}
-      <PurchaseModal vinylId={id} onSaleCreated={loadVinyl} />
       <Typography.Title level={3} style={{ marginTop: '1.5rem' }}>
-        Clients acheteurs
+        Achats
       </Typography.Title>
       {sales.length === 0 ? (
         <Typography.Text type="secondary">
@@ -152,12 +138,17 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
           dataSource={sales}
           renderItem={sale => (
             <List.Item>
-              <Link
-                to="/clients/$clientId"
-                params={{ clientId: sale.clientId }}
-              >
-                {sale.client.firstName} {sale.client.lastName}
-              </Link>
+              <Space>
+                <Link to="/vinyls/$vinylId" params={{ vinylId: sale.vinylId }}>
+                  {sale.vinyl.title}
+                </Link>
+                {sale.vinyl.artist && (
+                  <Typography.Text type="secondary">
+                    par {sale.vinyl.artist.firstName}{' '}
+                    {sale.vinyl.artist.lastName}
+                  </Typography.Text>
+                )}
+              </Space>
               <Typography.Text type="secondary" style={{ marginLeft: '1rem' }}>
                 {new Date(sale.date).toLocaleDateString('fr-FR')}
               </Typography.Text>

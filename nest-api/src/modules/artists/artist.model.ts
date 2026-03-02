@@ -15,6 +15,10 @@ export type CreateArtistModel = {
 
 export type UpdateArtistModel = Partial<CreateArtistModel>;
 
+export type ArtistWithVinylCountModel = ArtistModel & {
+  vinylCount: number;
+};
+
 export type ArtistStatsModel = {
   artistId: ArtistId;
   totalVinyls: number;

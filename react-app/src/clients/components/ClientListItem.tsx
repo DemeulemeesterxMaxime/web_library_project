@@ -1,44 +1,44 @@
 import { useState } from 'react'
-import type { ArtistModel, UpdateArtistModel } from '../ArtistModel'
+import type { ClientModel, UpdateClientModel } from '../ClientModel'
 import { Button, Col, Modal, Row, Tag } from 'antd'
 import {
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
   EditOutlined,
-  CustomerServiceOutlined,
+  ShoppingOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 
-interface ArtistListItemProps {
-  artist: ArtistModel
+interface ClientListItemProps {
+  client: ClientModel
   onDelete: (id: string) => void
-  onUpdate: (id: string, input: UpdateArtistModel) => void
+  onUpdate: (id: string, input: UpdateClientModel) => void
 }
 
-export function ArtistListItem({
-  artist,
+export function ClientListItem({
+  client,
   onDelete,
   onUpdate,
-}: ArtistListItemProps): React.JSX.Element {
-  const [firstName, setFirstName] = useState<string>(artist.firstName)
-  const [lastName, setLastName] = useState<string>(artist.lastName)
+}: ClientListItemProps): React.JSX.Element {
+  const [firstName, setFirstName] = useState<string>(client.firstName)
+  const [lastName, setLastName] = useState<string>(client.lastName)
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
 
   function onCancelEdit(): void {
     setIsEditing(false)
-    setFirstName(artist.firstName)
-    setLastName(artist.lastName)
+    setFirstName(client.firstName)
+    setLastName(client.lastName)
   }
 
   function onValidateEdit(): void {
-    onUpdate(artist.id, { firstName, lastName })
+    onUpdate(client.id, { firstName, lastName })
     setIsEditing(false)
   }
 
   function onConfirmDelete(): void {
-    onDelete(artist.id)
+    onDelete(client.id)
     setIsDeleteModalOpen(false)
   }
 
@@ -72,53 +72,49 @@ export function ArtistListItem({
             </span>
           ) : (
             <Link
-              to="/artists/$artistId"
-              params={{ artistId: artist.id }}
+              to="/clients/$clientId"
+              params={{ clientId: client.id }}
               style={{ margin: 'auto 0' }}
             >
               <span style={{ fontWeight: 'bold' }}>
-                {artist.firstName} {artist.lastName}
+                {client.firstName} {client.lastName}
               </span>
+              {client.salesCount !== undefined && client.salesCount > 0 && (
+                <Tag
+                  color="green"
+                  icon={<ShoppingOutlined />}
+                  style={{ marginLeft: '0.5rem' }}
+                >
+                  {client.salesCount}
+                </Tag>
+              )}
             </Link>
           )}
         </Col>
-        <Col span={4} style={{ margin: 'auto 0' }}>
-          {artist.vinylCount !== undefined && (
-            <Tag icon={<CustomerServiceOutlined />} color="green">
-              {artist.vinylCount}
-            </Tag>
-          )}
-        </Col>
-        <Col
-          span={6}
-          style={{
-            display: 'flex',
-            gap: '.25rem',
-            margin: 'auto 0',
-            justifyContent: 'flex-end',
-          }}
-        >
+        <Col>
           {isEditing ? (
-            <>
+            <span style={{ display: 'flex', gap: '.5rem' }}>
               <Button type="primary" onClick={onValidateEdit}>
                 <CheckOutlined />
               </Button>
               <Button onClick={onCancelEdit}>
                 <CloseOutlined />
               </Button>
-            </>
+            </span>
           ) : (
-            <Button type="primary" onClick={() => setIsEditing(true)}>
-              <EditOutlined />
-            </Button>
+            <span style={{ display: 'flex', gap: '.5rem' }}>
+              <Button type="primary" onClick={() => setIsEditing(true)}>
+                <EditOutlined />
+              </Button>
+              <Button
+                type="primary"
+                danger
+                onClick={() => setIsDeleteModalOpen(true)}
+              >
+                <DeleteOutlined />
+              </Button>
+            </span>
           )}
-          <Button
-            type="primary"
-            danger
-            onClick={() => setIsDeleteModalOpen(true)}
-          >
-            <DeleteOutlined />
-          </Button>
         </Col>
       </Row>
       <Modal
@@ -127,14 +123,11 @@ export function ArtistListItem({
         onCancel={() => setIsDeleteModalOpen(false)}
         title="Confirmer la suppression"
         okText="Supprimer"
-        okButtonProps={{ danger: true }}
         cancelText="Annuler"
+        okButtonProps={{ danger: true }}
       >
-        Êtes-vous sûr de vouloir supprimer{' '}
-        <strong>
-          {artist.firstName} {artist.lastName}
-        </strong>{' '}
-        ?
+        Êtes-vous sûr de vouloir supprimer le client « {client.firstName}{' '}
+        {client.lastName} » ?
       </Modal>
     </>
   )
