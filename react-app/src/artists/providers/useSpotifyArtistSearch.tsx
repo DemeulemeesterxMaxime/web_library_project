@@ -1,21 +1,21 @@
 import { useState } from 'react'
 import httpClient from '../../api/httpClient'
-import type { SpotifyAlbumResult } from '../SpotifyModel'
+import type { SpotifyArtistResult } from '../../vinyls/SpotifyModel'
 
-type UseSpotifySearchReturn = {
-  results: SpotifyAlbumResult[]
+type UseSpotifyArtistSearchReturn = {
+  results: SpotifyArtistResult[]
   isSearching: boolean
   searchError: string | null
-  searchAlbum: (query: string, artist: string) => void
+  searchArtist: (query: string) => void
   clearResults: () => void
 }
 
-export function useSpotifySearch(): UseSpotifySearchReturn {
-  const [results, setResults] = useState<SpotifyAlbumResult[]>([])
+export function useSpotifyArtistSearch(): UseSpotifyArtistSearchReturn {
+  const [results, setResults] = useState<SpotifyArtistResult[]>([])
   const [isSearching, setIsSearching] = useState<boolean>(false)
   const [searchError, setSearchError] = useState<string | null>(null)
 
-  async function searchAlbum(query: string, artist: string): Promise<void> {
+  async function searchArtist(query: string): Promise<void> {
     if (query.trim().length === 0) {
       setResults([])
       return
@@ -25,9 +25,9 @@ export function useSpotifySearch(): UseSpotifySearchReturn {
     setSearchError(null)
 
     try {
-      const response = await httpClient.get<SpotifyAlbumResult[]>(
-        '/spotify/search',
-        { params: { query, artist } },
+      const response = await httpClient.get<SpotifyArtistResult[]>(
+        '/spotify/search-artist',
+        { params: { query } },
       )
       setResults(response.data)
     } catch (error: unknown) {
@@ -45,5 +45,5 @@ export function useSpotifySearch(): UseSpotifySearchReturn {
     setSearchError(null)
   }
 
-  return { results, isSearching, searchError, searchAlbum, clearResults }
+  return { results, isSearching, searchError, searchArtist, clearResults }
 }

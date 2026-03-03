@@ -6,3 +6,10 @@ export type SpotifyAlbumResult = {
   totalTracks: number
   artistName: string
 }
+
+export type SpotifyArtistResult = {
+  spotifyId: string
+  name: string
+  photo: string
+  genres: string[]
+}
