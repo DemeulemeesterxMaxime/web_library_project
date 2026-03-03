@@ -11,6 +11,7 @@ import {
 import { Link } from '@tanstack/react-router'
 import { useCollectionDetailsProvider } from '../providers/useCollectionDetailsProvider'
 import httpClient from '../../api/httpClient'
+import type { AxiosResponse } from 'axios'
 import type { UpdateCollectionModel } from '../CollectionModel'
 import type { VinylModel } from '../../vinyls/VinylModel'
 
@@ -41,7 +42,7 @@ export function CollectionDetails({
   useEffect(() => {
     httpClient
       .get<GetVinylsResponse>('/vinyls')
-      .then(response => {
+      .then((response: AxiosResponse<GetVinylsResponse>) => {
         setAllVinyls(response.data.data)
       })
       .catch(() => undefined)

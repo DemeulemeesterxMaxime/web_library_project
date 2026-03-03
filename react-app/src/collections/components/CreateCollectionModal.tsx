@@ -4,6 +4,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import type { CreateCollectionModel } from '../CollectionModel'
 import type { ClientModel } from '../../clients/ClientModel'
 import httpClient from '../../api/httpClient'
+import type { AxiosResponse } from 'axios'
 
 interface CreateCollectionModalProps {
   onCreate: (collection: CreateCollectionModel) => void
@@ -22,7 +23,7 @@ export function CreateCollectionModal({
     if (isOpen) {
       httpClient
         .get<ClientModel[]>('/clients')
-        .then(response => {
+        .then((response: AxiosResponse<ClientModel[]>) => {
           setClients(response.data)
         })
         .catch(() => undefined)
