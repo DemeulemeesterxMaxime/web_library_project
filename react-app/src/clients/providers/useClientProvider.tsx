@@ -5,6 +5,7 @@ import type {
   UpdateClientModel,
 } from '../ClientModel'
 import httpClient from '../../api/httpClient'
+import type { AxiosResponse } from 'axios'
 
 type UseClientProviderReturn = {
   clients: ClientModel[]
@@ -20,7 +21,7 @@ export function useClientProvider(): UseClientProviderReturn {
   const loadClients = useCallback((): void => {
     httpClient
       .get<ClientModel[]>('/clients')
-      .then(response => {
+      .then((response: AxiosResponse<ClientModel[]>) => {
         setClients(response.data)
       })
       .catch(() => undefined)

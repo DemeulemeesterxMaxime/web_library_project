@@ -5,6 +5,7 @@ import type {
   VinylModel,
 } from '../VinylModel'
 import httpClient from '../../api/httpClient'
+import type { AxiosResponse } from 'axios'
 
 type UseVinylProviderReturn = {
   vinyls: VinylModel[]
@@ -20,7 +21,7 @@ export function useVinylProvider(): UseVinylProviderReturn {
   const loadVinyls = useCallback((): void => {
     httpClient
       .get<{ data: VinylModel[] }>('/vinyls')
-      .then(response => {
+      .then((response: AxiosResponse<{ data: VinylModel[] }>) => {
         setVinyls(response.data.data)
       })
       .catch(() => undefined)

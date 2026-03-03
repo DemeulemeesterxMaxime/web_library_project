@@ -5,6 +5,7 @@ import type {
   UpdateArtistModel,
 } from '../ArtistModel'
 import httpClient from '../../api/httpClient'
+import type { AxiosResponse } from 'axios'
 
 type UseArtistProviderReturn = {
   artists: ArtistModel[]
@@ -20,7 +21,7 @@ export function useArtistProvider(): UseArtistProviderReturn {
   const loadArtists = useCallback((): void => {
     httpClient
       .get<ArtistModel[]>('/artists')
-      .then(response => {
+      .then((response: AxiosResponse<ArtistModel[]>) => {
         setArtists(response.data)
       })
       .catch(() => undefined)
