@@ -84,7 +84,7 @@ export function ClientListItem({
               <span style={{ fontWeight: 'bold' }}>
                 {client.firstName} {client.lastName}
               </span>
-              {client.salesCount !== undefined && client.salesCount > 0 && (
+              {client.salesCount !== undefined && (
                 <Tag
                   color="green"
                   icon={<ShoppingOutlined />}
