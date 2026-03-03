@@ -8,7 +8,6 @@ import {
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { useClientDetailsProvider } from '../providers/useClientDetailsProvider'
-import httpClient from '../../api/httpClient'
 import type { UpdateClientModel } from '../ClientModel'
 
 interface ClientDetailsProps {
@@ -16,7 +15,8 @@ interface ClientDetailsProps {
 }
 
 export function ClientDetails({ id }: ClientDetailsProps): React.JSX.Element {
-  const { isLoading, client, sales, loadClient } = useClientDetailsProvider(id)
+  const { isLoading, client, sales, loadClient, updateClient } =
+    useClientDetailsProvider(id)
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [editFirstName, setEditFirstName] = useState<string>('')
   const [editLastName, setEditLastName] = useState<string>('')
@@ -48,11 +48,9 @@ export function ClientDetails({ id }: ClientDetailsProps): React.JSX.Element {
       ...(editEmail.length > 0 ? { email: editEmail } : {}),
       ...(editPhoto.length > 0 ? { photo: editPhoto } : {}),
     }
-    httpClient
-      .patch(`/clients/${id}`, updateData)
+    updateClient(updateData)
       .then(() => {
         setIsEditing(false)
-        loadClient()
       })
       .catch(() => undefined)
   }
