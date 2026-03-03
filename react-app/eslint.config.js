@@ -38,6 +38,7 @@ export default [
       ...prettierConfig.rules,
       'prettier/prettier': 'error',
       'react/react-in-jsx-scope': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
     },
     settings: {
       react: {
