@@ -1,7 +1,7 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { Layout } from '../Layout'
 
-const RootLayout = () => {
+const RootLayout = (): React.JSX.Element => {
   return (
     <Layout>
       <Outlet />
