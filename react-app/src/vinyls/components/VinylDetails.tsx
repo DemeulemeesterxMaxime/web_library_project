@@ -3,12 +3,14 @@ import {
   Input,
   InputNumber,
   List,
+  Select,
   Skeleton,
   Space,
   Tag,
   Typography,
 } from 'antd'
 import { useVinylDetailsProvider } from '../providers/useVinylDetailsProvider'
+import { useVinylArtistsProvider } from '../providers/useVinylArtistsProvider'
 import { useEffect, useState } from 'react'
 import {
   ArrowLeftOutlined,
@@ -28,20 +30,24 @@ interface VinylDetailsProps {
 
 export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
   const { isLoading, vinyl, sales, loadVinyl } = useVinylDetailsProvider(id)
+  const { artists, loadArtists } = useVinylArtistsProvider()
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [editTitle, setEditTitle] = useState<string>('')
   const [editYear, setEditYear] = useState<number | null>(null)
   const [editPhoto, setEditPhoto] = useState<string>('')
+  const [editArtistId, setEditArtistId] = useState<string>('')
 
   useEffect(() => {
     loadVinyl()
-  }, [loadVinyl])
+    loadArtists()
+  }, [loadVinyl, loadArtists])
 
   function startEditing(): void {
     if (vinyl) {
       setEditTitle(vinyl.title)
       setEditYear(vinyl.yearReleased)
       setEditPhoto(vinyl.photo ?? '')
+      setEditArtistId(vinyl.artist?.id ?? '')
       setIsEditing(true)
     }
   }
@@ -54,6 +60,7 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
     const updateData: UpdateVinylModel = {
       title: editTitle,
       yearReleased: editYear ?? undefined,
+      artistId: editArtistId.length > 0 ? editArtistId : undefined,
       ...(editPhoto.length > 0 ? { photo: editPhoto } : {}),
     }
     httpClient
@@ -104,6 +111,16 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
               setEditPhoto(e.target.value)
             }
             placeholder="URL photo (optionnel)"
+          />
+          <Select
+            style={{ width: '100%' }}
+            value={editArtistId}
+            onChange={(value: string) => setEditArtistId(value)}
+            placeholder="Artiste"
+            options={artists.map(artist => ({
+              value: artist.id,
+              label: `${artist.firstName} ${artist.lastName}`,
+            }))}
           />
           <Space>
             <Button
