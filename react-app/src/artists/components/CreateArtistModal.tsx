@@ -34,13 +34,8 @@ export function CreateArtistModal({
 
   function handleSelectSpotifyResult(result: SpotifyArtistResult): void {
     setPhoto(result.photo)
-    const nameParts = result.name.split(' ')
-    if (nameParts.length >= 2) {
-      setFirstName(nameParts[0])
-      setLastName(nameParts.slice(1).join(' '))
-    } else {
-      setLastName(result.name)
-    }
+    setFirstName(result.name)
+    setLastName('')
     clearResults()
   }
 
@@ -67,7 +62,7 @@ export function CreateArtistModal({
           onClose()
         }}
         okButtonProps={{
-          disabled: firstName.length === 0 || lastName.length === 0,
+          disabled: firstName.length === 0,
         }}
         title="Nouvel artiste"
         width={560}

@@ -26,11 +26,7 @@ function splitArtistName(fullName: string): {
   firstName: string
   lastName: string
 } {
-  const parts = fullName.trim().split(' ')
-  if (parts.length >= 2) {
-    return { firstName: parts[0], lastName: parts.slice(1).join(' ') }
-  }
-  return { firstName: '', lastName: fullName.trim() }
+  return { firstName: fullName.trim(), lastName: '' }
 }
 
 export function CreateVinylModal({
@@ -76,6 +72,7 @@ export function CreateVinylModal({
   }
 
   function handleSelectSpotifyResult(result: SpotifyAlbumResult): void {
+    setTitle(result.name)
     setPhoto(result.photo)
     setYearReleased(result.yearReleased)
 

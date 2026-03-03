@@ -14,6 +14,11 @@ import httpClient from '../../api/httpClient'
 import type { UpdateCollectionModel } from '../CollectionModel'
 import type { VinylModel } from '../../vinyls/VinylModel'
 
+interface GetVinylsResponse {
+  data: VinylModel[]
+  totalCount: number
+}
+
 interface CollectionDetailsProps {
   id: string
 }
@@ -35,9 +40,9 @@ export function CollectionDetails({
 
   useEffect(() => {
     httpClient
-      .get<VinylModel[]>('/vinyls')
+      .get<GetVinylsResponse>('/vinyls')
       .then(response => {
-        setAllVinyls(response.data)
+        setAllVinyls(response.data.data)
       })
       .catch(() => undefined)
   }, [])
