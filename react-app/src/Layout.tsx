@@ -22,7 +22,8 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps): React.JSX.Element {
   const pathname = useRouterState({
-    select: state => state.location.pathname,
+    select: (state: { location: { pathname: string } }): string =>
+      state.location.pathname,
   })
 
   const matches = useMatches()
@@ -30,14 +31,17 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
   const loaderTitle =
     lastMatch?.loaderData &&
     typeof lastMatch.loaderData === 'object' &&
-    'title' in lastMatch.loaderData
-      ? (lastMatch.loaderData as { title: string }).title
+    lastMatch.loaderData !== null &&
+    'title' in lastMatch.loaderData &&
+    typeof (lastMatch.loaderData as Record<string, unknown>)['title'] ===
+      'string'
+      ? String((lastMatch.loaderData as Record<string, unknown>)['title'])
       : undefined
 
   const breadcrumbItems = pathname
     .split('/')
     .filter(segment => segment.length > 0)
-    .map((segment, index, segments) => {
+    .map((segment: string, index: number, segments: string[]) => {
       const path = `/${segments.slice(0, index + 1).join('/')}`
 
       if (segment === 'vinyls') {
