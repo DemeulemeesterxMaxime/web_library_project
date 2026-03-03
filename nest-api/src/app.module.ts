@@ -8,6 +8,7 @@ import { ArtistModule } from './modules/artists/artist.module';
 import { ClientModule } from './modules/clients/client.module';
 import { SaleModule } from './modules/sales/sale.module';
 import { SpotifyModule } from './modules/spotify/spotify.module';
+import { CollectionModule } from './modules/collections/collection.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SpotifyModule } from './modules/spotify/spotify.module';
     ClientModule,
     SaleModule,
     SpotifyModule,
+    CollectionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

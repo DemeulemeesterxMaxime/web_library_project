@@ -4,9 +4,11 @@ import { Route as aboutRoute } from './routes/about'
 import { Route as vinylsRoute } from './routes/vinyls'
 import { Route as artistsRoute } from './routes/artists'
 import { Route as clientsRoute } from './routes/clients'
+import { Route as collectionsRoute } from './routes/collections'
 import { Breadcrumb, Space, type MenuProps } from 'antd'
 import {
   CustomerServiceOutlined,
+  FolderOutlined,
   HomeOutlined,
   InfoOutlined,
   TeamOutlined,
@@ -50,6 +52,10 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
         return { title: <Link to={clientsRoute.to}>Clients</Link> }
       }
 
+      if (segment === 'collections') {
+        return { title: <Link to={collectionsRoute.to}>Collections</Link> }
+      }
+
       if (path.startsWith('/vinyls/')) {
         return { title: loaderTitle ?? segment }
       }
@@ -59,6 +65,10 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
       }
 
       if (path.startsWith('/clients/')) {
+        return { title: loaderTitle ?? segment }
+      }
+
+      if (path.startsWith('/collections/')) {
         return { title: loaderTitle ?? segment }
       }
 
@@ -85,6 +95,11 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
       label: <Link to={clientsRoute.to}>Clients</Link>,
       key: 'clients',
       icon: <UserOutlined />,
+    },
+    {
+      label: <Link to={collectionsRoute.to}>Collections</Link>,
+      key: 'collections',
+      icon: <FolderOutlined />,
     },
     {
       label: <Link to={aboutRoute.to}>À propos</Link>,
