@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import type { VinylModel } from '../VinylModel'
+import type { VinylModel, UpdateVinylModel } from '../VinylModel'
 import type { SaleModel } from '../../clients/ClientModel'
 import httpClient from '../../api/httpClient'
 
@@ -8,6 +8,7 @@ type UseVinylDetailsProviderReturn = {
   vinyl: VinylModel | null
   sales: SaleModel[]
   loadVinyl: () => void
+  updateVinyl: (data: UpdateVinylModel) => Promise<void>
 }
 
 export function useVinylDetailsProvider(
@@ -36,5 +37,13 @@ export function useVinylDetailsProvider(
       })
   }, [id])
 
-  return { isLoading, vinyl, sales, loadVinyl }
+  const updateVinyl = useCallback(
+    async (data: UpdateVinylModel): Promise<void> => {
+      await httpClient.patch(`/vinyls/${id}`, data)
+      loadVinyl()
+    },
+    [id, loadVinyl],
+  )
+
+  return { isLoading, vinyl, sales, loadVinyl, updateVinyl }
 }
