@@ -15,9 +15,22 @@ import type { CreateVinylModel } from '../VinylModel'
 import { useVinylArtistsProvider } from '../providers/useVinylArtistsProvider'
 import { useSpotifySearch } from '../providers/useSpotifySearch'
 import type { SpotifyAlbumResult } from '../SpotifyModel'
+import type { SpotifyArtistResult } from '../SpotifyModel'
+import httpClient from '../../api/httpClient'
 
 interface CreateVinylModalProps {
   onCreate: (vinyl: CreateVinylModel) => void
+}
+
+function splitArtistName(fullName: string): {
+  firstName: string
+  lastName: string
+} {
+  const parts = fullName.trim().split(' ')
+  if (parts.length >= 2) {
+    return { firstName: parts[0], lastName: parts.slice(1).join(' ') }
+  }
+  return { firstName: '', lastName: fullName.trim() }
 }
 
 export function CreateVinylModal({
@@ -28,14 +41,20 @@ export function CreateVinylModal({
   const [yearReleased, setYearReleased] = useState<number | null>(null)
   const [artistId, setArtistId] = useState<string | undefined>(undefined)
   const [photo, setPhoto] = useState<string>('')
-  const { artists, loadArtists } = useVinylArtistsProvider()
-  const { results, isSearching, searchAlbum, clearResults } = useSpotifySearch()
+  const [pendingResult, setPendingResult] = useState<SpotifyAlbumResult | null>(
+    null,
+  )
+  const [isCreatingArtist, setIsCreatingArtist] = useState<boolean>(false)
+  const { artists, loadArtists, createArtist } = useVinylArtistsProvider()
+  const { results, isSearching, searchError, searchAlbum, clearResults } =
+    useSpotifySearch()
 
   function onClose(): void {
     setTitle('')
     setYearReleased(null)
     setArtistId(undefined)
     setPhoto('')
+    setPendingResult(null)
     clearResults()
     setIsOpen(false)
   }
@@ -48,10 +67,52 @@ export function CreateVinylModal({
     searchAlbum(title, artistName)
   }
 
+  function findArtistByName(name: string): string | undefined {
+    const normalized = name.toLowerCase().trim()
+    return artists.find(a => {
+      const fullName = `${a.firstName} ${a.lastName}`.toLowerCase().trim()
+      return fullName === normalized
+    })?.id
+  }
+
   function handleSelectSpotifyResult(result: SpotifyAlbumResult): void {
     setPhoto(result.photo)
     setYearReleased(result.yearReleased)
+
+    const existingArtistId = findArtistByName(result.artistName)
+    if (existingArtistId) {
+      setArtistId(existingArtistId)
+    } else {
+      setPendingResult(result)
+    }
     clearResults()
+  }
+
+  async function handleConfirmCreateArtist(): Promise<void> {
+    if (!pendingResult) return
+
+    setIsCreatingArtist(true)
+    const { firstName, lastName } = splitArtistName(pendingResult.artistName)
+
+    let photo: string | undefined = undefined
+    try {
+      const response = await httpClient.get<SpotifyArtistResult[]>(
+        '/spotify/search-artist',
+        { params: { query: pendingResult.artistName } },
+      )
+      if (response.data.length > 0 && response.data[0].photo) {
+        photo = response.data[0].photo
+      }
+    } catch {
+      // photo reste undefined si la recherche échoue
+    }
+
+    const created = await createArtist({ firstName, lastName, photo })
+    if (created) {
+      setArtistId(created.id)
+    }
+    setPendingResult(null)
+    setIsCreatingArtist(false)
   }
 
   useEffect(() => {
@@ -102,6 +163,7 @@ export function CreateVinylModal({
           <Select
             style={{ width: '100%' }}
             placeholder="Artiste"
+            value={artistId}
             options={artists.map(artist => ({
               label: `${artist.firstName} ${artist.lastName}`,
               value: artist.id,
@@ -137,6 +199,12 @@ export function CreateVinylModal({
           {isSearching && (
             <div style={{ textAlign: 'center', padding: '1rem' }}>
               <Spin size="small" />
+            </div>
+          )}
+
+          {searchError && (
+            <div style={{ color: '#FF4444', padding: '0.5rem 0' }}>
+              Erreur Spotify : {searchError}
             </div>
           )}
 
@@ -178,6 +246,23 @@ export function CreateVinylModal({
             />
           )}
         </Space>
+      </Modal>
+
+      <Modal
+        open={pendingResult !== null}
+        title="Artiste inconnu"
+        onOk={() => {
+          handleConfirmCreateArtist()
+        }}
+        onCancel={() => setPendingResult(null)}
+        confirmLoading={isCreatingArtist}
+        okText="Créer l'artiste"
+        cancelText="Annuler"
+      >
+        <p>
+          L&apos;artiste <strong>{pendingResult?.artistName ?? ''}</strong>{' '}
+          n&apos;existe pas encore. Voulez-vous le créer automatiquement ?
+        </p>
       </Modal>
     </>
   )
