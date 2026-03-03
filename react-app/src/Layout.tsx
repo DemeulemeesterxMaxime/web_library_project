@@ -119,13 +119,7 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
         <Menu mode="horizontal" items={items} />
       </div>
       <div className="layout-content">
-        <Breadcrumb
-          className="layout-breadcrumb"
-          items={[
-            { title: <Link to={indexRoute.to}>Accueil</Link> },
-            ...breadcrumbItems,
-          ]}
-        />
+        <Breadcrumb className="layout-breadcrumb" items={breadcrumbItems} />
         {children}
       </div>
     </Space>
