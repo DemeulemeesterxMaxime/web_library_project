@@ -29,8 +29,7 @@ export function CreateVinylModal({
   const [artistId, setArtistId] = useState<string | undefined>(undefined)
   const [photo, setPhoto] = useState<string>('')
   const { artists, loadArtists } = useVinylArtistsProvider()
-  const { results, isSearching, searchAlbum, clearResults } =
-    useSpotifySearch()
+  const { results, isSearching, searchAlbum, clearResults } = useSpotifySearch()
 
   function onClose(): void {
     setTitle('')
@@ -42,7 +41,7 @@ export function CreateVinylModal({
   }
 
   function handleSpotifySearch(): void {
-    const selectedArtist = artists.find((a) => a.id === artistId)
+    const selectedArtist = artists.find(a => a.id === artistId)
     const artistName = selectedArtist
       ? `${selectedArtist.firstName} ${selectedArtist.lastName}`
       : ''
@@ -103,7 +102,7 @@ export function CreateVinylModal({
           <Select
             style={{ width: '100%' }}
             placeholder="Artiste"
-            options={artists.map((artist) => ({
+            options={artists.map(artist => ({
               label: `${artist.firstName} ${artist.lastName}`,
               value: artist.id,
             }))}
@@ -163,11 +162,7 @@ export function CreateVinylModal({
                 >
                   <List.Item.Meta
                     avatar={
-                      <Avatar
-                        shape="square"
-                        size={40}
-                        src={item.photo}
-                      />
+                      <Avatar shape="square" size={40} src={item.photo} />
                     }
                     title={
                       <span style={{ color: '#E0E0E0' }}>{item.name}</span>

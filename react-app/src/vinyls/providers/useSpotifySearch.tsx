@@ -25,7 +25,7 @@ export function useSpotifySearch(): UseSpotifySearchReturn {
       .get<SpotifyAlbumResult[]>('/spotify/search', {
         params: { query, artist },
       })
-      .then((response) => {
+      .then(response => {
         setResults(response.data)
       })
       .catch(() => {

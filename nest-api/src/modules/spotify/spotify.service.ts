@@ -53,8 +53,9 @@ export class SpotifyService {
     }
 
     const clientId = this.configService.get<string>('SPOTIFY_CLIENT_ID');
-    const clientSecret =
-      this.configService.get<string>('SPOTIFY_CLIENT_SECRET');
+    const clientSecret = this.configService.get<string>(
+      'SPOTIFY_CLIENT_SECRET',
+    );
 
     const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString(
       'base64',
@@ -108,10 +109,7 @@ export class SpotifyService {
 
     return response.data.albums.items.map(
       (item: SpotifyAlbumItem): SpotifyAlbumResult => {
-        const photo =
-          item.images.length > 0
-            ? item.images[0].url
-            : '';
+        const photo = item.images.length > 0 ? item.images[0].url : '';
         const year = parseInt(item.release_date.substring(0, 4), 10);
 
         return {
