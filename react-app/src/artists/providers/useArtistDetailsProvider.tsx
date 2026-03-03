@@ -39,10 +39,6 @@ export function useArtistDetailsProvider(
         setStats(null)
         setVinyls([])
       })
-      .catch(() => {
-        setArtist(null)
-        setStats(null)
-      })
       .finally(() => {
         setIsLoading(false)
       })
