@@ -11,4 +11,15 @@ export default defineConfig({
     }),
     react(),
   ],
+  build: {
+    chunkSizeWarningLimit: 800,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          antd: ['antd', '@ant-design/icons'],
+          vendor: ['react', 'react-dom'],
+        },
+      },
+    },
+  },
 })
