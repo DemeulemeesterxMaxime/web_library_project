@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
-import { SpotifyAlbumResult } from './spotify.model';
+import { SpotifyAlbumResult, SpotifyArtistResult } from './spotify.model';
 
 interface SpotifyTokenResponse {
   access_token: string;
@@ -32,6 +32,19 @@ interface SpotifyAlbumItem {
 interface SpotifySearchResponse {
   albums: {
     items: SpotifyAlbumItem[];
+  };
+}
+
+interface SpotifyArtistItem {
+  id: string;
+  name: string;
+  images: SpotifyImage[];
+  genres: string[];
+}
+
+interface SpotifyArtistSearchResponse {
+  artists: {
+    items: SpotifyArtistItem[];
   };
 }
 
@@ -120,6 +133,39 @@ export class SpotifyService {
           totalTracks: item.total_tracks,
           artistName:
             item.artists.length > 0 ? item.artists[0].name : 'Unknown',
+        };
+      },
+    );
+  }
+
+  public async searchArtist(query: string): Promise<SpotifyArtistResult[]> {
+    const token = await this.getAccessToken();
+
+    const response = await firstValueFrom(
+      this.httpService.get<SpotifyArtistSearchResponse>(
+        'https://api.spotify.com/v1/search',
+        {
+          params: {
+            q: query,
+            type: 'artist',
+            limit: 5,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      ),
+    );
+
+    return response.data.artists.items.map(
+      (item: SpotifyArtistItem): SpotifyArtistResult => {
+        const photo = item.images.length > 0 ? item.images[0].url : '';
+
+        return {
+          spotifyId: item.id,
+          name: item.name,
+          photo,
+          genres: item.genres ?? [],
         };
       },
     );

@@ -8,3 +8,8 @@ export class SearchAlbumDto {
   @IsOptional()
   artist?: string;
 }
+
+export class SearchArtistDto {
+  @IsString()
+  query: string;
+}
