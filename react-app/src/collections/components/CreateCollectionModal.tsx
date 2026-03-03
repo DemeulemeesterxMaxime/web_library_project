@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button, Modal, Input, Select, Space } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import type { CreateCollectionModel } from '../CollectionModel'
-import type { ClientModel } from '../../clients/ClientModel'
-import httpClient from '../../api/httpClient'
+import { useClientProvider } from '../../clients/providers/useClientProvider'
 
 interface CreateCollectionModalProps {
   onCreate: (collection: CreateCollectionModel) => void
@@ -16,18 +15,7 @@ export function CreateCollectionModal({
   const [name, setName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [clientId, setClientId] = useState<string>('')
-  const [clients, setClients] = useState<ClientModel[]>([])
-
-  useEffect(() => {
-    if (isOpen) {
-      httpClient
-        .get<ClientModel[]>('/clients')
-        .then(response => {
-          setClients(response.data)
-        })
-        .catch(() => undefined)
-    }
-  }, [isOpen])
+  const { clients } = useClientProvider()
 
   function onClose(): void {
     setName('')
