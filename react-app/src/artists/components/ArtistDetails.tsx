@@ -16,7 +16,6 @@ import {
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { useArtistDetailsProvider } from '../providers/useArtistDetailsProvider'
-import httpClient from '../../api/httpClient'
 import type { UpdateArtistModel } from '../ArtistModel'
 
 interface ArtistDetailsProps {
@@ -24,7 +23,7 @@ interface ArtistDetailsProps {
 }
 
 export function ArtistDetails({ id }: ArtistDetailsProps): React.JSX.Element {
-  const { isLoading, artist, stats, vinyls, loadArtist } =
+  const { isLoading, artist, stats, vinyls, loadArtist, updateArtist } =
     useArtistDetailsProvider(id)
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [editFirstName, setEditFirstName] = useState<string>('')
@@ -54,11 +53,9 @@ export function ArtistDetails({ id }: ArtistDetailsProps): React.JSX.Element {
       lastName: editLastName,
       ...(editPhoto.length > 0 ? { photo: editPhoto } : {}),
     }
-    httpClient
-      .patch(`/artists/${id}`, updateData)
+    updateArtist(updateData)
       .then(() => {
         setIsEditing(false)
-        loadArtist()
       })
       .catch(() => undefined)
   }

@@ -1,5 +1,9 @@
 import { useCallback, useState } from 'react'
-import type { ArtistModel, ArtistStatsModel } from '../ArtistModel'
+import type {
+  ArtistModel,
+  ArtistStatsModel,
+  UpdateArtistModel,
+} from '../ArtistModel'
 import type { VinylModel } from '../../vinyls/VinylModel'
 import httpClient from '../../api/httpClient'
 
@@ -9,6 +13,7 @@ type UseArtistDetailsProviderReturn = {
   stats: ArtistStatsModel | null
   vinyls: VinylModel[]
   loadArtist: () => void
+  updateArtist: (data: UpdateArtistModel) => Promise<void>
 }
 
 export function useArtistDetailsProvider(
@@ -48,5 +53,13 @@ export function useArtistDetailsProvider(
       })
   }, [id])
 
-  return { isLoading, artist, stats, vinyls, loadArtist }
+  const updateArtist = useCallback(
+    async (data: UpdateArtistModel): Promise<void> => {
+      await httpClient.patch(`/artists/${id}`, data)
+      loadArtist()
+    },
+    [id, loadArtist],
+  )
+
+  return { isLoading, artist, stats, vinyls, loadArtist, updateArtist }
 }
