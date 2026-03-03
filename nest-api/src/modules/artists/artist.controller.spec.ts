@@ -1,7 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArtistController } from './artist.controller';
 import { ArtistService } from './artist.service';
-import { ArtistModel, ArtistStatsModel, ArtistWithVinylCountModel } from './artist.model';
+import {
+  ArtistModel,
+  ArtistStatsModel,
+  ArtistWithVinylCountModel,
+} from './artist.model';
 import { ArtistId } from './artist.entity';
 
 describe('ArtistController', () => {
@@ -103,7 +107,10 @@ describe('ArtistController', () => {
       const result = await controller.updateArtist('artist-uuid-1', updateDto);
 
       expect(result).toEqual(mockArtist);
-      expect(service.updateArtist).toHaveBeenCalledWith('artist-uuid-1', updateDto);
+      expect(service.updateArtist).toHaveBeenCalledWith(
+        'artist-uuid-1',
+        updateDto,
+      );
     });
   });
 

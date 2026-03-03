@@ -88,7 +88,10 @@ describe('ClientController', () => {
       const result = await controller.updateClient('client-uuid-1', updateDto);
 
       expect(result).toEqual(mockClient);
-      expect(service.updateClient).toHaveBeenCalledWith('client-uuid-1', updateDto);
+      expect(service.updateClient).toHaveBeenCalledWith(
+        'client-uuid-1',
+        updateDto,
+      );
     });
   });
 
