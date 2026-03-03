@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { Button, Input, Modal, Space } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { Avatar, Button, Input, List, Modal, Space, Spin } from 'antd'
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import type { CreateArtistModel } from '../ArtistModel'
+import { useSpotifyArtistSearch } from '../providers/useSpotifyArtistSearch'
+import type { SpotifyArtistResult } from '../../vinyls/SpotifyModel'
 
 interface CreateArtistModalProps {
   onCreate: (artist: CreateArtistModel) => void
@@ -14,13 +16,35 @@ export function CreateArtistModal({
   const [firstName, setFirstName] = useState<string>('')
   const [lastName, setLastName] = useState<string>('')
   const [photo, setPhoto] = useState<string>('')
+  const { results, isSearching, searchError, searchArtist, clearResults } =
+    useSpotifyArtistSearch()
 
   function onClose(): void {
     setFirstName('')
     setLastName('')
     setPhoto('')
+    clearResults()
     setIsOpen(false)
   }
+
+  function handleSpotifySearch(): void {
+    const query = `${firstName} ${lastName}`.trim()
+    searchArtist(query)
+  }
+
+  function handleSelectSpotifyResult(result: SpotifyArtistResult): void {
+    setPhoto(result.photo)
+    const nameParts = result.name.split(' ')
+    if (nameParts.length >= 2) {
+      setFirstName(nameParts[0])
+      setLastName(nameParts.slice(1).join(' '))
+    } else {
+      setLastName(result.name)
+    }
+    clearResults()
+  }
+
+  const canSearch = firstName.trim().length > 0 || lastName.trim().length > 0
 
   return (
     <>
@@ -46,6 +70,7 @@ export function CreateArtistModal({
           disabled: firstName.length === 0 || lastName.length === 0,
         }}
         title="Nouvel artiste"
+        width={560}
       >
         <Space direction="vertical" style={{ width: '100%' }}>
           <Input
@@ -72,6 +97,66 @@ export function CreateArtistModal({
               setPhoto(event.target.value)
             }
           />
+
+          <Button
+            icon={<SearchOutlined />}
+            onClick={handleSpotifySearch}
+            disabled={!canSearch}
+            loading={isSearching}
+            style={{ width: '100%' }}
+          >
+            Rechercher sur Spotify
+          </Button>
+
+          {isSearching && (
+            <div style={{ textAlign: 'center', padding: '1rem' }}>
+              <Spin size="small" />
+            </div>
+          )}
+
+          {searchError && (
+            <div style={{ color: '#FF4444', padding: '0.5rem 0' }}>
+              Erreur Spotify : {searchError}
+            </div>
+          )}
+
+          {results.length > 0 && (
+            <List
+              size="small"
+              bordered
+              style={{
+                backgroundColor: '#0A0A0A',
+                borderColor: '#2A2A2A',
+                maxHeight: '200px',
+                overflowY: 'auto',
+              }}
+              dataSource={results}
+              renderItem={(item: SpotifyArtistResult) => (
+                <List.Item
+                  style={{
+                    cursor: 'pointer',
+                    padding: '0.5rem',
+                    transition: 'background-color 0.2s ease',
+                  }}
+                  onClick={() => handleSelectSpotifyResult(item)}
+                >
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar shape="square" size={40} src={item.photo} />
+                    }
+                    title={
+                      <span style={{ color: '#E0E0E0' }}>{item.name}</span>
+                    }
+                    description={
+                      <span style={{ color: '#888888' }}>
+                        {(item.genres ?? []).slice(0, 3).join(', ')}
+                      </span>
+                    }
+                  />
+                </List.Item>
+              )}
+            />
+          )}
         </Space>
       </Modal>
     </>
