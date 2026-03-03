@@ -1,11 +1,19 @@
-import { useCallback, useState } from 'react'
-import type { CollectionModel } from '../CollectionModel'
+import { useCallback, useEffect, useState } from 'react'
+import type { CollectionModel, UpdateCollectionModel } from '../CollectionModel'
+import type { VinylModel } from '../../vinyls/VinylModel'
 import httpClient from '../../api/httpClient'
+
+interface GetVinylsResponse {
+  data: VinylModel[]
+  totalCount: number
+}
 
 type UseCollectionDetailsProviderReturn = {
   isLoading: boolean
   collection: CollectionModel | null
+  availableVinyls: VinylModel[]
   loadCollection: () => void
+  updateCollection: (data: UpdateCollectionModel) => void
   addVinyl: (vinylId: string) => void
   removeVinyl: (vinylId: string) => void
 }
@@ -15,6 +23,16 @@ export function useCollectionDetailsProvider(
 ): UseCollectionDetailsProviderReturn {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [collection, setCollection] = useState<CollectionModel | null>(null)
+  const [availableVinyls, setAvailableVinyls] = useState<VinylModel[]>([])
+
+  useEffect(() => {
+    httpClient
+      .get<GetVinylsResponse>('/vinyls')
+      .then(response => {
+        setAvailableVinyls(response.data.data)
+      })
+      .catch(() => undefined)
+  }, [])
 
   const loadCollection = useCallback((): void => {
     setIsLoading(true)
@@ -55,5 +73,25 @@ export function useCollectionDetailsProvider(
     [id, loadCollection],
   )
 
-  return { isLoading, collection, loadCollection, addVinyl, removeVinyl }
+  const updateCollection = useCallback(
+    (data: UpdateCollectionModel): void => {
+      httpClient
+        .patch(`/collections/${id}`, data)
+        .then(() => {
+          loadCollection()
+        })
+        .catch(() => undefined)
+    },
+    [id, loadCollection],
+  )
+
+  return {
+    isLoading,
+    collection,
+    availableVinyls,
+    loadCollection,
+    updateCollection,
+    addVinyl,
+    removeVinyl,
+  }
 }
