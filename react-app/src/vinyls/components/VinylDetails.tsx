@@ -21,7 +21,6 @@ import {
 import { Link } from '@tanstack/react-router'
 import { Route as vinylsRoute } from '../../routes/vinyls'
 import { PurchaseModal } from '../../components/PurchaseModal'
-import httpClient from '../../api/httpClient'
 import type { UpdateVinylModel } from '../VinylModel'
 
 interface VinylDetailsProps {
@@ -29,7 +28,8 @@ interface VinylDetailsProps {
 }
 
 export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
-  const { isLoading, vinyl, sales, loadVinyl } = useVinylDetailsProvider(id)
+  const { isLoading, vinyl, sales, loadVinyl, updateVinyl } =
+    useVinylDetailsProvider(id)
   const { artists, loadArtists } = useVinylArtistsProvider()
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [editTitle, setEditTitle] = useState<string>('')
@@ -63,11 +63,9 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
       artistId: editArtistId.length > 0 ? editArtistId : undefined,
       ...(editPhoto.length > 0 ? { photo: editPhoto } : {}),
     }
-    httpClient
-      .patch(`/vinyls/${id}`, updateData)
+    updateVinyl(updateData)
       .then(() => {
         setIsEditing(false)
-        loadVinyl()
       })
       .catch(() => undefined)
   }

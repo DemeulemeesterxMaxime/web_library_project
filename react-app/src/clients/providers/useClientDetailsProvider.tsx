@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import type { ClientModel, SaleModel } from '../ClientModel'
+import type { ClientModel, SaleModel, UpdateClientModel } from '../ClientModel'
 import httpClient from '../../api/httpClient'
 
 type UseClientDetailsProviderReturn = {
@@ -7,6 +7,7 @@ type UseClientDetailsProviderReturn = {
   client: ClientModel | null
   sales: SaleModel[]
   loadClient: () => void
+  updateClient: (data: UpdateClientModel) => Promise<void>
 }
 
 export function useClientDetailsProvider(
@@ -35,5 +36,13 @@ export function useClientDetailsProvider(
       })
   }, [id])
 
-  return { isLoading, client, sales, loadClient }
+  const updateClient = useCallback(
+    async (data: UpdateClientModel): Promise<void> => {
+      await httpClient.patch(`/clients/${id}`, data)
+      loadClient()
+    },
+    [id, loadClient],
+  )
+
+  return { isLoading, client, sales, loadClient, updateClient }
 }
