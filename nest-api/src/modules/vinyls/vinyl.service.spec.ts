@@ -68,9 +68,7 @@ describe('VinylService', () => {
       const result = await service.getVinylById('vinyl-uuid-1');
 
       expect(result).toEqual(mockVinyl);
-      expect(vinylRepository.getVinylById).toHaveBeenCalledWith(
-        'vinyl-uuid-1',
-      );
+      expect(vinylRepository.getVinylById).toHaveBeenCalledWith('vinyl-uuid-1');
     });
   });
 
