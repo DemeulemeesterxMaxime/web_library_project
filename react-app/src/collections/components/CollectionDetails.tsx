@@ -10,15 +10,7 @@ import {
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { useCollectionDetailsProvider } from '../providers/useCollectionDetailsProvider'
-import httpClient from '../../api/httpClient'
-import type { AxiosResponse } from 'axios'
 import type { UpdateCollectionModel } from '../CollectionModel'
-import type { VinylModel } from '../../vinyls/VinylModel'
-
-interface GetVinylsResponse {
-  data: VinylModel[]
-  totalCount: number
-}
 
 interface CollectionDetailsProps {
   id: string
@@ -27,26 +19,23 @@ interface CollectionDetailsProps {
 export function CollectionDetails({
   id,
 }: CollectionDetailsProps): React.JSX.Element {
-  const { isLoading, collection, loadCollection, addVinyl, removeVinyl } =
-    useCollectionDetailsProvider(id)
+  const {
+    isLoading,
+    collection,
+    availableVinyls,
+    loadCollection,
+    updateCollection,
+    addVinyl,
+    removeVinyl,
+  } = useCollectionDetailsProvider(id)
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [editName, setEditName] = useState<string>('')
   const [editDescription, setEditDescription] = useState<string>('')
-  const [allVinyls, setAllVinyls] = useState<VinylModel[]>([])
   const [selectedVinylId, setSelectedVinylId] = useState<string>('')
 
   useEffect(() => {
     loadCollection()
   }, [loadCollection])
-
-  useEffect(() => {
-    httpClient
-      .get<GetVinylsResponse>('/vinyls')
-      .then((response: AxiosResponse<GetVinylsResponse>) => {
-        setAllVinyls(response.data.data)
-      })
-      .catch(() => undefined)
-  }, [])
 
   function startEditing(): void {
     if (collection) {
@@ -65,13 +54,8 @@ export function CollectionDetails({
       name: editName,
       ...(editDescription.length > 0 ? { description: editDescription } : {}),
     }
-    httpClient
-      .patch(`/collections/${id}`, updateData)
-      .then(() => {
-        setIsEditing(false)
-        loadCollection()
-      })
-      .catch(() => undefined)
+    updateCollection(updateData)
+    setIsEditing(false)
   }
 
   function handleAddVinyl(): void {
@@ -86,7 +70,7 @@ export function CollectionDetails({
   }
 
   const existingVinylIds = collection?.vinyls.map(v => v.id) ?? []
-  const availableVinyls = allVinyls.filter(
+  const filteredVinyls = availableVinyls.filter(
     v => !existingVinylIds.includes(v.id),
   )
 
@@ -165,7 +149,7 @@ export function CollectionDetails({
           value={selectedVinylId.length > 0 ? selectedVinylId : undefined}
           onChange={(value: string) => setSelectedVinylId(value)}
           style={{ width: '300px' }}
-          options={availableVinyls.map(vinyl => ({
+          options={filteredVinyls.map(vinyl => ({
             label: `${vinyl.title} — ${vinyl.artist.firstName} ${vinyl.artist.lastName}`,
             value: vinyl.id,
           }))}
