@@ -5,6 +5,7 @@ import type {
   UpdateCollectionModel,
 } from '../CollectionModel'
 import httpClient from '../../api/httpClient'
+import type { AxiosResponse } from 'axios'
 
 type UseCollectionProviderReturn = {
   collections: CollectionModel[]
@@ -20,7 +21,7 @@ export function useCollectionProvider(): UseCollectionProviderReturn {
   const loadCollections = useCallback((): void => {
     httpClient
       .get<CollectionModel[]>('/collections')
-      .then(response => {
+      .then((response: AxiosResponse<CollectionModel[]>) => {
         setCollections(response.data)
       })
       .catch(() => undefined)

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import type { CollectionModel } from '../CollectionModel'
 import httpClient from '../../api/httpClient'
+import type { AxiosResponse } from 'axios'
 
 type UseCollectionDetailsProviderReturn = {
   isLoading: boolean
@@ -20,7 +21,7 @@ export function useCollectionDetailsProvider(
     setIsLoading(true)
     httpClient
       .get<CollectionModel>(`/collections/${id}`)
-      .then(response => {
+      .then((response: AxiosResponse<CollectionModel>) => {
         setCollection(response.data)
       })
       .catch(() => {

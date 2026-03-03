@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import type { VinylModel } from '../VinylModel'
 import httpClient from '../../api/httpClient'
+import type { AxiosResponse } from 'axios'
 import type { CreateArtistModel } from '../../artists/ArtistModel'
 
 type ArtistModel = VinylModel['artist']
@@ -17,7 +18,7 @@ export function useVinylArtistsProvider(): UseVinylArtistsProviderReturn {
   const loadArtists = useCallback((): void => {
     httpClient
       .get<ArtistModel[]>('/artists')
-      .then(response => {
+      .then((response: AxiosResponse<ArtistModel[]>) => {
         setArtists(response.data)
       })
       .catch(() => undefined)
