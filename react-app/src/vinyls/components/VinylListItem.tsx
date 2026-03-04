@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { VinylModel, UpdateVinylModel } from '../VinylModel'
-import { Button, Col, Modal, Row, Tag } from 'antd'
+import { Button, Col, Input, Modal, Row, Tag } from 'antd'
 import {
   CheckOutlined,
   CloseOutlined,
@@ -57,7 +57,7 @@ export function VinylListItem({
       >
         <Col span={10} style={{ margin: 'auto 0' }}>
           {isEditing ? (
-            <input
+            <Input
               value={title}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setTitle(e.target.value)

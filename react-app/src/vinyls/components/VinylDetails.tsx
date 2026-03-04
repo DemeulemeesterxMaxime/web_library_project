@@ -23,6 +23,7 @@ import { Route as vinylsRoute } from '../../routes/vinyls'
 import { PurchaseModal } from '../../components/PurchaseModal'
 import type { ArtistModel } from '../../artists/ArtistModel'
 import type { UpdateVinylModel } from '../VinylModel'
+import type { SaleModel } from '../../clients/ClientModel'
 
 interface VinylDetailsProps {
   id: string
@@ -170,7 +171,7 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
       ) : (
         <List
           dataSource={sales}
-          renderItem={sale => (
+          renderItem={(sale: SaleModel) => (
             <List.Item>
               <Link
                 to="/clients/$clientId"

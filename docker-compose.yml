@@ -5,12 +5,24 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    volumes:
+      - sqlite-data:/app/data
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
 
   front:
     build:
       context: ./react-app
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3000
     depends_on:
-      - back
+      back:
+        condition: service_healthy
     ports:
       - "5173:80"
+    restart: unless-stopped
+
+volumes:
+  sqlite-data:

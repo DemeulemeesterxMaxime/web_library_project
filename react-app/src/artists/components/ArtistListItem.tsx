@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ArtistModel, UpdateArtistModel } from '../ArtistModel'
-import { Button, Col, Modal, Row, Tag } from 'antd'
+import { Button, Col, Input, Modal, Row, Tag } from 'antd'
 import {
   CheckOutlined,
   CloseOutlined,
@@ -59,14 +59,14 @@ export function ArtistListItem({
         <Col span={14} style={{ margin: 'auto 0' }}>
           {isEditing ? (
             <span style={{ display: 'flex', gap: '.5rem' }}>
-              <input
+              <Input
                 value={firstName}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setFirstName(e.target.value)
                 }
                 placeholder="Prénom"
               />
-              <input
+              <Input
                 value={lastName}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setLastName(e.target.value)

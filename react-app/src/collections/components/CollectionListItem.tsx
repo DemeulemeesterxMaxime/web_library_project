@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { CollectionModel, UpdateCollectionModel } from '../CollectionModel'
-import { Button, Col, Modal, Row, Tag } from 'antd'
+import { Button, Col, Input, Modal, Row, Tag } from 'antd'
 import {
   CheckOutlined,
   CloseOutlined,
@@ -77,7 +77,7 @@ export function CollectionListItem({
             />
           )}
           {isEditing ? (
-            <input
+            <Input
               value={name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setName(e.target.value)

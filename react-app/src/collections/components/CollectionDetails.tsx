@@ -176,7 +176,7 @@ export function CollectionDetails({
       ) : (
         <List
           dataSource={collection?.vinyls ?? []}
-          renderItem={vinyl => (
+          renderItem={(vinyl: CollectionVinylModel) => (
             <List.Item
               actions={[
                 <Button
