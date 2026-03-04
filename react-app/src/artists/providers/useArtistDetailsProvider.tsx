@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import type { AxiosResponse } from 'axios'
 import type {
   ArtistModel,
   ArtistStatsModel,
@@ -31,14 +32,20 @@ export function useArtistDetailsProvider(
       httpClient.get<ArtistStatsModel>(`/artists/${id}/stats`),
       httpClient.get<{ data: VinylModel[] }>('/vinyls'),
     ])
-      .then(([artistResponse, statsResponse, vinylsResponse]) => {
-        setArtist(artistResponse.data)
-        setStats(statsResponse.data)
-        const artistVinyls = vinylsResponse.data.data.filter(
-          (vinyl: VinylModel) => vinyl.artist.id === id,
-        )
-        setVinyls(artistVinyls)
-      })
+      .then(
+        ([artistResponse, statsResponse, vinylsResponse]: [
+          AxiosResponse<ArtistModel>,
+          AxiosResponse<ArtistStatsModel>,
+          AxiosResponse<{ data: VinylModel[] }>,
+        ]) => {
+          setArtist(artistResponse.data)
+          setStats(statsResponse.data)
+          const artistVinyls = vinylsResponse.data.data.filter(
+            (vinyl: VinylModel) => vinyl.artist.id === id,
+          )
+          setVinyls(artistVinyls)
+        },
+      )
       .catch(() => {
         setArtist(null)
         setStats(null)

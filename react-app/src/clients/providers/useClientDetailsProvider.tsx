@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import type { AxiosResponse } from 'axios'
 import type { ClientModel, SaleModel, UpdateClientModel } from '../ClientModel'
 import httpClient from '../../api/httpClient'
 
@@ -23,10 +24,15 @@ export function useClientDetailsProvider(
       httpClient.get<ClientModel>(`/clients/${id}`),
       httpClient.get<SaleModel[]>('/sales', { params: { clientId: id } }),
     ])
-      .then(([clientResponse, salesResponse]) => {
-        setClient(clientResponse.data)
-        setSales(salesResponse.data)
-      })
+      .then(
+        ([clientResponse, salesResponse]: [
+          AxiosResponse<ClientModel>,
+          AxiosResponse<SaleModel[]>,
+        ]) => {
+          setClient(clientResponse.data)
+          setSales(salesResponse.data)
+        },
+      )
       .catch(() => {
         setClient(null)
         setSales([])
