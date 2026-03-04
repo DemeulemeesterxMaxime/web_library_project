@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { useClientDetailsProvider } from '../providers/useClientDetailsProvider'
-import type { UpdateClientModel } from '../ClientModel'
+import type { UpdateClientModel, SaleModel } from '../ClientModel'
 
 interface ClientDetailsProps {
   id: string
@@ -142,7 +142,7 @@ export function ClientDetails({ id }: ClientDetailsProps): React.JSX.Element {
       ) : (
         <List
           dataSource={sales}
-          renderItem={sale => (
+          renderItem={(sale: SaleModel) => (
             <List.Item>
               <Space>
                 <Link to="/vinyls/$vinylId" params={{ vinylId: sale.vinylId }}>
