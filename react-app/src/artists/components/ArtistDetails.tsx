@@ -17,6 +17,7 @@ import {
 import { Link } from '@tanstack/react-router'
 import { useArtistDetailsProvider } from '../providers/useArtistDetailsProvider'
 import type { UpdateArtistModel } from '../ArtistModel'
+import type { VinylModel } from '../../vinyls/VinylModel'
 
 interface ArtistDetailsProps {
   id: string
@@ -141,7 +142,7 @@ export function ArtistDetails({ id }: ArtistDetailsProps): React.JSX.Element {
       ) : (
         <List
           dataSource={vinyls}
-          renderItem={vinyl => (
+          renderItem={(vinyl: VinylModel) => (
             <List.Item>
               <Link to="/vinyls/$vinylId" params={{ vinylId: vinyl.id }}>
                 {vinyl.title}
