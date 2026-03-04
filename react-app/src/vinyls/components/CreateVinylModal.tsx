@@ -61,7 +61,7 @@ export function CreateVinylModal({
     const artistName = selectedArtist
       ? `${selectedArtist.firstName} ${selectedArtist.lastName}`
       : ''
-    searchAlbum(title, artistName)
+    void searchAlbum(title, artistName)
   }
 
   function findArtistByName(name: string): string | undefined {
@@ -250,7 +250,7 @@ export function CreateVinylModal({
         open={pendingResult !== null}
         title="Artiste inconnu"
         onOk={() => {
-          handleConfirmCreateArtist()
+          void handleConfirmCreateArtist()
         }}
         onCancel={() => setPendingResult(null)}
         confirmLoading={isCreatingArtist}
