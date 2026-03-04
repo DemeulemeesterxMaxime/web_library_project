@@ -50,7 +50,7 @@ function filterVinyls(vinyls: VinylModel[], query: string): VinylModel[] {
 
   const lowerQuery = query.toLowerCase()
 
-  return vinyls.filter(vinyl => {
+  return vinyls.filter((vinyl: VinylModel) => {
     const artistFullName =
       `${vinyl.artist.firstName} ${vinyl.artist.lastName}`.toLowerCase()
     const titleMatch = vinyl.title.toLowerCase().includes(lowerQuery)
@@ -111,7 +111,7 @@ export function CatalogPage(): React.JSX.Element {
         />
       ) : (
         <Row gutter={[16, 16]} className="catalog-grid">
-          {sortedVinyls.map(vinyl => (
+          {sortedVinyls.map((vinyl: VinylModel) => (
             <Col key={vinyl.id} xs={24} sm={12} md={8} lg={6}>
               <CatalogCard vinyl={vinyl} onSaleCreated={() => loadVinyls()} />
             </Col>

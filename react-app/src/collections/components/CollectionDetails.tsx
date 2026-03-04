@@ -10,7 +10,11 @@ import {
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { useCollectionDetailsProvider } from '../providers/useCollectionDetailsProvider'
-import type { UpdateCollectionModel } from '../CollectionModel'
+import type {
+  CollectionVinylModel,
+  UpdateCollectionModel,
+} from '../CollectionModel'
+import type { VinylModel } from '../../vinyls/VinylModel'
 
 interface CollectionDetailsProps {
   id: string
@@ -69,9 +73,10 @@ export function CollectionDetails({
     return <Skeleton active />
   }
 
-  const existingVinylIds = collection?.vinyls.map(v => v.id) ?? []
+  const existingVinylIds =
+    collection?.vinyls.map((v: CollectionVinylModel) => v.id) ?? []
   const filteredVinyls = availableVinyls.filter(
-    v => !existingVinylIds.includes(v.id),
+    (v: VinylModel) => !existingVinylIds.includes(v.id),
   )
 
   return (
@@ -149,7 +154,7 @@ export function CollectionDetails({
           value={selectedVinylId.length > 0 ? selectedVinylId : undefined}
           onChange={(value: string) => setSelectedVinylId(value)}
           style={{ width: '300px' }}
-          options={filteredVinyls.map(vinyl => ({
+          options={filteredVinyls.map((vinyl: VinylModel) => ({
             label: `${vinyl.title} — ${vinyl.artist.firstName} ${vinyl.artist.lastName}`,
             value: vinyl.id,
           }))}

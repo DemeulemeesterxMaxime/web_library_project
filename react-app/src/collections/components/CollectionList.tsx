@@ -1,3 +1,4 @@
+import type { CollectionModel } from '../CollectionModel'
 import { useCollectionProvider } from '../providers/useCollectionProvider'
 import { CreateCollectionModal } from './CreateCollectionModal'
 import { CollectionListItem } from './CollectionListItem'
@@ -10,7 +11,7 @@ export function CollectionList(): React.JSX.Element {
     <>
       <CreateCollectionModal onCreate={createCollection} />
       <div style={{ padding: '0 .5rem' }}>
-        {collections.map(collection => (
+        {collections.map((collection: CollectionModel) => (
           <CollectionListItem
             key={collection.id}
             collection={collection}

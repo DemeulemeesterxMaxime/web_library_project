@@ -1,3 +1,4 @@
+import type { ArtistModel } from '../ArtistModel'
 import { useArtistProvider } from '../providers/useArtistProvider'
 import { CreateArtistModal } from './CreateArtistModal'
 import { ArtistListItem } from './ArtistListItem'
@@ -10,7 +11,7 @@ export function ArtistList(): React.JSX.Element {
     <>
       <CreateArtistModal onCreate={createArtist} />
       <div style={{ padding: '0 .5rem' }}>
-        {artists.map(artist => (
+        {artists.map((artist: ArtistModel) => (
           <ArtistListItem
             key={artist.id}
             artist={artist}

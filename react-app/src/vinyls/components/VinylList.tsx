@@ -1,3 +1,4 @@
+import type { VinylModel } from '../VinylModel'
 import { useVinylProvider } from '../providers/useVinylProvider'
 import { CreateVinylModal } from './CreateVinylModal'
 import { VinylListItem } from './VinylListItem'
@@ -9,7 +10,7 @@ export function VinylList(): React.JSX.Element {
     <>
       <CreateVinylModal onCreate={createVinyl} />
       <div style={{ padding: '0 .5rem' }}>
-        {vinyls.map(vinyl => (
+        {vinyls.map((vinyl: VinylModel) => (
           <VinylListItem
             key={vinyl.id}
             vinyl={vinyl}

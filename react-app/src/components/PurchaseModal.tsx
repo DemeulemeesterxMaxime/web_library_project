@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button, DatePicker, Modal, Select, Space } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
+import type { ClientModel } from '../clients/ClientModel'
 import { useClientProvider } from '../clients/providers/useClientProvider'
 import { useSaleProvider } from '../clients/providers/useSaleProvider'
 
@@ -41,7 +42,7 @@ export function PurchaseModal({
     }
   }
 
-  const clientOptions = clients.map(client => ({
+  const clientOptions = clients.map((client: ClientModel) => ({
     label: `${client.firstName} ${client.lastName}`,
     value: client.id,
   }))
