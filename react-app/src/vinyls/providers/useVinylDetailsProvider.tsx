@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import type { AxiosResponse } from 'axios'
 import type { VinylModel, UpdateVinylModel } from '../VinylModel'
 import type { SaleModel } from '../../clients/ClientModel'
 import httpClient from '../../api/httpClient'
@@ -24,10 +25,15 @@ export function useVinylDetailsProvider(
       httpClient.get<VinylModel>(`/vinyls/${id}`),
       httpClient.get<SaleModel[]>('/sales', { params: { vinylId: id } }),
     ])
-      .then(([vinylResponse, salesResponse]) => {
-        setVinyl(vinylResponse.data)
-        setSales(salesResponse.data)
-      })
+      .then(
+        ([vinylResponse, salesResponse]: [
+          AxiosResponse<VinylModel>,
+          AxiosResponse<SaleModel[]>,
+        ]) => {
+          setVinyl(vinylResponse.data)
+          setSales(salesResponse.data)
+        },
+      )
       .catch(() => {
         setVinyl(null)
         setSales([])
