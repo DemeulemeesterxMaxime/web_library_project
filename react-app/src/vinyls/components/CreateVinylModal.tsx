@@ -11,6 +11,7 @@ import {
   Spin,
 } from 'antd'
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import type { ArtistModel } from '../../artists/ArtistModel'
 import type { CreateVinylModel } from '../VinylModel'
 import { useVinylArtistsProvider } from '../providers/useVinylArtistsProvider'
 import { useSpotifySearch } from '../providers/useSpotifySearch'
@@ -56,16 +57,16 @@ export function CreateVinylModal({
   }
 
   function handleSpotifySearch(): void {
-    const selectedArtist = artists.find(a => a.id === artistId)
+    const selectedArtist = artists.find((a: ArtistModel) => a.id === artistId)
     const artistName = selectedArtist
       ? `${selectedArtist.firstName} ${selectedArtist.lastName}`
       : ''
-    searchAlbum(title, artistName)
+    void searchAlbum(title, artistName)
   }
 
   function findArtistByName(name: string): string | undefined {
     const normalized = name.toLowerCase().trim()
-    return artists.find(a => {
+    return artists.find((a: ArtistModel) => {
       const fullName = `${a.firstName} ${a.lastName}`.toLowerCase().trim()
       return fullName === normalized
     })?.id
@@ -161,7 +162,7 @@ export function CreateVinylModal({
             style={{ width: '100%' }}
             placeholder="Artiste"
             value={artistId}
-            options={artists.map(artist => ({
+            options={artists.map((artist: ArtistModel) => ({
               label: `${artist.firstName} ${artist.lastName}`,
               value: artist.id,
             }))}
@@ -249,7 +250,7 @@ export function CreateVinylModal({
         open={pendingResult !== null}
         title="Artiste inconnu"
         onOk={() => {
-          handleConfirmCreateArtist()
+          void handleConfirmCreateArtist()
         }}
         onCancel={() => setPendingResult(null)}
         confirmLoading={isCreatingArtist}

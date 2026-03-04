@@ -6,7 +6,7 @@ type UseSpotifySearchReturn = {
   results: SpotifyAlbumResult[]
   isSearching: boolean
   searchError: string | null
-  searchAlbum: (query: string, artist: string) => void
+  searchAlbum: (query: string, artist: string) => Promise<void>
   clearResults: () => void
 }
 

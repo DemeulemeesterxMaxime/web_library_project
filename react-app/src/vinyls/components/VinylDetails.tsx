@@ -21,6 +21,7 @@ import {
 import { Link } from '@tanstack/react-router'
 import { Route as vinylsRoute } from '../../routes/vinyls'
 import { PurchaseModal } from '../../components/PurchaseModal'
+import type { ArtistModel } from '../../artists/ArtistModel'
 import type { UpdateVinylModel } from '../VinylModel'
 
 interface VinylDetailsProps {
@@ -115,7 +116,7 @@ export function VinylDetails({ id }: VinylDetailsProps): React.JSX.Element {
             value={editArtistId}
             onChange={(value: string) => setEditArtistId(value)}
             placeholder="Artiste"
-            options={artists.map(artist => ({
+            options={artists.map((artist: ArtistModel) => ({
               value: artist.id,
               label: `${artist.firstName} ${artist.lastName}`,
             }))}

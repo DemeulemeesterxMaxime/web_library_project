@@ -40,7 +40,7 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
 
   const breadcrumbItems = pathname
     .split('/')
-    .filter(segment => segment.length > 0)
+    .filter((segment: string) => segment.length > 0)
     .map((segment: string, index: number, segments: string[]) => {
       const path = `/${segments.slice(0, index + 1).join('/')}`
 

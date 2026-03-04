@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button, Modal, Input, Select, Space } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import type { CreateCollectionModel } from '../CollectionModel'
+import type { ClientModel } from '../../clients/ClientModel'
 import { useClientProvider } from '../../clients/providers/useClientProvider'
 
 interface CreateCollectionModalProps {
@@ -71,7 +72,7 @@ export function CreateCollectionModal({
             value={clientId.length > 0 ? clientId : undefined}
             onChange={(value: string) => setClientId(value)}
             style={{ width: '100%' }}
-            options={clients.map(client => ({
+            options={clients.map((client: ClientModel) => ({
               label: `${client.firstName} ${client.lastName}`,
               value: client.id,
             }))}

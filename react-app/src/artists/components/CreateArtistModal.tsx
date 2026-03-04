@@ -29,7 +29,7 @@ export function CreateArtistModal({
 
   function handleSpotifySearch(): void {
     const query = `${firstName} ${lastName}`.trim()
-    searchArtist(query)
+    void searchArtist(query)
   }
 
   function handleSelectSpotifyResult(result: SpotifyArtistResult): void {

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import type { AxiosResponse } from 'axios'
 import type { CollectionModel, UpdateCollectionModel } from '../CollectionModel'
 import type { VinylModel } from '../../vinyls/VinylModel'
 import httpClient from '../../api/httpClient'
@@ -38,7 +39,7 @@ export function useCollectionDetailsProvider(
     setIsLoading(true)
     httpClient
       .get<CollectionModel>(`/collections/${id}`)
-      .then((response: AxiosResponse<GetVinylsResponse>) => {
+      .then((response: AxiosResponse<CollectionModel>) => {
         setCollection(response.data)
       })
       .catch(() => {
