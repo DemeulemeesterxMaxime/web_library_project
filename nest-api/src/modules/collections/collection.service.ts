@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CollectionRepository } from './collection.repository';
+import { SaleService } from '../sales/sale.service';
 import type {
   CollectionModel,
   CreateCollectionModel,
@@ -8,7 +9,10 @@ import type {
 
 @Injectable()
 export class CollectionService {
-  constructor(private readonly collectionRepository: CollectionRepository) {}
+  constructor(
+    private readonly collectionRepository: CollectionRepository,
+    private readonly saleService: SaleService,
+  ) {}
 
   public async getAllCollections(): Promise<CollectionModel[]> {
     return this.collectionRepository.getAllCollections();
@@ -52,6 +56,24 @@ export class CollectionService {
     collectionId: string,
     vinylId: string,
   ): Promise<CollectionModel | undefined> {
+    const collection = await this.getCollectionById(collectionId);
+    if (!collection) {
+      return undefined;
+    }
+
+    if (!collection.isPublic) {
+      const clientSales = await this.saleService.getSales(
+        collection.clientId,
+        undefined,
+      );
+      const hasPurchased = clientSales.some((sale) => sale.vinylId === vinylId);
+      if (!hasPurchased) {
+        throw new BadRequestException(
+          'Cette collection est privée : seuls les vinyles achetés par le propriétaire peuvent y être ajoutés.',
+        );
+      }
+    }
+
     return this.collectionRepository.addVinylToCollection(
       collectionId,
       vinylId,

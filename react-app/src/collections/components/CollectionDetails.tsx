@@ -1,11 +1,23 @@
 import { useEffect, useState } from 'react'
-import { Button, Input, List, Select, Skeleton, Space, Typography } from 'antd'
+import {
+  Button,
+  Input,
+  List,
+  Select,
+  Skeleton,
+  Space,
+  Switch,
+  Tag,
+  Typography,
+} from 'antd'
 import {
   ArrowLeftOutlined,
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
   EditOutlined,
+  GlobalOutlined,
+  LockOutlined,
   PlusOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
@@ -141,6 +153,25 @@ export function CollectionDetails({
           <Typography.Text type="secondary">
             par {collection?.client.firstName} {collection?.client.lastName}
           </Typography.Text>
+          <Space align="center">
+            <Tag
+              color={collection?.isPublic ? 'blue' : 'orange'}
+              icon={
+                collection?.isPublic ? <GlobalOutlined /> : <LockOutlined />
+              }
+            >
+              {collection?.isPublic ? 'Publique' : 'Privée'}
+            </Tag>
+            <Switch
+              checked={collection?.isPublic ?? false}
+              onChange={(checked: boolean) =>
+                updateCollection({ isPublic: checked })
+              }
+              checkedChildren="Publique"
+              unCheckedChildren="Privée"
+              size="small"
+            />
+          </Space>
         </>
       )}
 

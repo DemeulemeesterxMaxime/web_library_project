@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateCollectionDto {
   @IsString()
@@ -10,6 +10,10 @@ export class CreateCollectionDto {
 
   @IsUUID()
   clientId: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isPublic?: boolean;
 }
 
 export class UpdateCollectionDto {
@@ -20,6 +24,10 @@ export class UpdateCollectionDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isPublic?: boolean;
 }
 
 export class AddVinylToCollectionDto {

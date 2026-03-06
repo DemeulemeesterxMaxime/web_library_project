@@ -12,6 +12,7 @@ export type CollectionModel = {
   id: CollectionId;
   name: string;
   description: string | null;
+  isPublic: boolean;
   clientId: ClientId;
   client: {
     firstName: string;
@@ -25,9 +26,11 @@ export type CreateCollectionModel = {
   name: string;
   description?: string;
   clientId: string;
+  isPublic?: boolean;
 };
 
 export type UpdateCollectionModel = {
   name?: string;
   description?: string;
+  isPublic?: boolean;
 };

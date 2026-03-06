@@ -24,6 +24,9 @@ export class CollectionEntity extends BaseEntity {
   @Column({ nullable: true, type: 'varchar' })
   description: string | null;
 
+  @Column({ name: 'is_public', type: 'boolean', default: false })
+  isPublic: boolean;
+
   @Column({ name: 'client_id', type: 'uuid' })
   clientId: ClientId;
 
