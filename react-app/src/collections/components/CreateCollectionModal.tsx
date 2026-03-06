@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Modal, Input, Select, Space } from 'antd'
+import { Button, Modal, Input, Select, Space, Switch } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import type { CreateCollectionModel } from '../CollectionModel'
 import type { ClientModel } from '../../clients/ClientModel'
@@ -16,12 +16,14 @@ export function CreateCollectionModal({
   const [name, setName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [clientId, setClientId] = useState<string>('')
+  const [isPublic, setIsPublic] = useState<boolean>(false)
   const { clients } = useClientProvider()
 
   function onClose(): void {
     setName('')
     setDescription('')
     setClientId('')
+    setIsPublic(false)
     setIsOpen(false)
   }
 
@@ -41,6 +43,7 @@ export function CreateCollectionModal({
           onCreate({
             name,
             clientId,
+            isPublic,
             ...(description.length > 0 ? { description } : {}),
           })
           onClose()
@@ -77,6 +80,13 @@ export function CreateCollectionModal({
               value: client.id,
             }))}
           />
+          <Space>
+            <Switch
+              checked={isPublic}
+              onChange={(checked: boolean) => setIsPublic(checked)}
+            />
+            <span>{isPublic ? 'Publique' : 'Privée'}</span>
+          </Space>
         </Space>
       </Modal>
     </>

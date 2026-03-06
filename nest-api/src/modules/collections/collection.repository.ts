@@ -58,6 +58,7 @@ export class CollectionRepository {
       name: input.name,
       description: input.description ?? null,
       clientId: input.clientId as ClientId,
+      isPublic: input.isPublic ?? false,
     });
 
     const saved = await this.collectionRepository.save(entity);
@@ -76,13 +77,24 @@ export class CollectionRepository {
   ): Promise<CollectionModel | undefined> {
     const collection = await this.collectionRepository.findOne({
       where: { id: id as CollectionId },
+      relations: ['client', 'vinyls'],
     });
 
     if (!collection) {
       return undefined;
     }
 
-    await this.collectionRepository.update(id, input);
+    if (input.name !== undefined) {
+      collection.name = input.name;
+    }
+    if (input.description !== undefined) {
+      collection.description = input.description;
+    }
+    if (input.isPublic !== undefined) {
+      collection.isPublic = input.isPublic;
+    }
+
+    await this.collectionRepository.save(collection);
 
     const updated = await this.collectionRepository.findOne({
       where: { id: id as CollectionId },
@@ -164,6 +176,7 @@ export class CollectionRepository {
       id: entity.id,
       name: entity.name,
       description: entity.description,
+      isPublic: entity.isPublic,
       clientId: entity.clientId,
       client: {
         firstName: entity.client.firstName,

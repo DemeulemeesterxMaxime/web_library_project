@@ -8,6 +8,7 @@ export type CollectionModel = {
   id: string
   name: string
   description: string | null
+  isPublic: boolean
   clientId: string
   client: {
     firstName: string
@@ -21,9 +22,11 @@ export type CreateCollectionModel = {
   name: string
   description?: string
   clientId: string
+  isPublic?: boolean
 }
 
 export type UpdateCollectionModel = {
   name?: string
   description?: string
+  isPublic?: boolean
 }

@@ -13,6 +13,7 @@ describe('CollectionService', () => {
     id: 'coll-uuid-1' as CollectionId,
     name: 'Best of 2025',
     description: 'My favourite vinyls',
+    isPublic: false,
     clientId: 'client-uuid-1' as ClientId,
     client: { firstName: 'Alice', lastName: 'Dupont' },
     vinyls: [],

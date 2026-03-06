@@ -7,6 +7,8 @@ import {
   DeleteOutlined,
   EditOutlined,
   CustomerServiceOutlined,
+  LockOutlined,
+  GlobalOutlined,
 } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 
@@ -97,6 +99,15 @@ export function CollectionListItem({
                 style={{ marginLeft: '0.5rem' }}
               >
                 {collection.vinyls.length}
+              </Tag>
+              <Tag
+                color={collection.isPublic ? 'blue' : 'orange'}
+                icon={
+                  collection.isPublic ? <GlobalOutlined /> : <LockOutlined />
+                }
+                style={{ marginLeft: '0.25rem' }}
+              >
+                {collection.isPublic ? 'Publique' : 'Privée'}
               </Tag>
               <span
                 style={{
