@@ -26,7 +26,8 @@ export function useCollectionDetailsProvider(
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [collection, setCollection] = useState<CollectionModel | null>(null)
   const [allVinyls, setAllVinyls] = useState<VinylModel[]>([])
-  const [purchasedVinylIds, setPurchasedVinylIds] = useState<string[]>([])
+  const [soldVinylIds, setSoldVinylIds] = useState<string[]>([])
+  const [purchasedByOwnerIds, setPurchasedByOwnerIds] = useState<string[]>([])
 
   useEffect(() => {
     httpClient
@@ -38,21 +39,34 @@ export function useCollectionDetailsProvider(
   }, [])
 
   useEffect(() => {
-    if (collection && !collection.isPublic) {
+    if (!collection) return
+
+    if (collection.isPublic) {
+      httpClient
+        .get<SaleModel[]>('/sales')
+        .then((response: AxiosResponse<SaleModel[]>) => {
+          const ids = [
+            ...new Set(response.data.map((s: SaleModel) => s.vinylId)),
+          ]
+          setSoldVinylIds(ids)
+        })
+        .catch(() => undefined)
+    } else {
       httpClient
         .get<SaleModel[]>(`/sales?clientId=${collection.clientId}`)
         .then((response: AxiosResponse<SaleModel[]>) => {
-          const vinylIds = response.data.map((sale: SaleModel) => sale.vinylId)
-          setPurchasedVinylIds(vinylIds)
+          const ids = response.data.map((s: SaleModel) => s.vinylId)
+          setPurchasedByOwnerIds(ids)
         })
         .catch(() => undefined)
     }
   }, [collection])
 
-  const availableVinyls =
-    collection && !collection.isPublic
-      ? allVinyls.filter((v: VinylModel) => purchasedVinylIds.includes(v.id))
-      : allVinyls
+  const availableVinyls = collection
+    ? collection.isPublic
+      ? allVinyls.filter((v: VinylModel) => soldVinylIds.includes(v.id))
+      : allVinyls.filter((v: VinylModel) => purchasedByOwnerIds.includes(v.id))
+    : allVinyls
 
   const loadCollection = useCallback((): void => {
     setIsLoading(true)

@@ -61,7 +61,15 @@ export class CollectionService {
       return undefined;
     }
 
-    if (!collection.isPublic) {
+    if (collection.isPublic) {
+      const vinylSales = await this.saleService.getSales(undefined, vinylId);
+      const hasBeenSold = vinylSales.length > 0;
+      if (!hasBeenSold) {
+        throw new BadRequestException(
+          "Cette collection est publique : seuls les vinyles ayant été achetés par quelqu'un peuvent y être ajoutés.",
+        );
+      }
+    } else {
       const clientSales = await this.saleService.getSales(
         collection.clientId,
         undefined,
