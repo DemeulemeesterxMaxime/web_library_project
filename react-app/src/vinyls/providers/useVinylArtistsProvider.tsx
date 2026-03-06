@@ -1,10 +1,7 @@
 import { useCallback, useState } from 'react'
-import type { VinylModel } from '../VinylModel'
 import httpClient from '../../api/httpClient'
 import type { AxiosResponse } from 'axios'
-import type { CreateArtistModel } from '../../artists/ArtistModel'
-
-type ArtistModel = VinylModel['artist']
+import type { ArtistModel, CreateArtistModel } from '../../artists/ArtistModel'
 
 type UseVinylArtistsProviderReturn = {
   artists: ArtistModel[]
