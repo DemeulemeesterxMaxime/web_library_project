@@ -1,9 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CollectionService } from './collection.service';
 import { CollectionRepository } from './collection.repository';
+import { SaleService } from '../sales/sale.service';
 import type { CollectionModel } from './collection.model';
 import type { CollectionId } from './collection.entity';
 import type { ClientId } from '../clients/client.entity';
+import type { VinylId } from '../vinyls/vinyl.entity';
+import type { SaleId } from '../sales/sale.entity';
 
 describe('CollectionService', () => {
   let service: CollectionService;
@@ -31,6 +34,17 @@ describe('CollectionService', () => {
     removeVinylFromCollection: jest.fn().mockResolvedValue(mockCollection),
   };
 
+  const mockSaleService: Partial<SaleService> = {
+    getSales: jest.fn().mockResolvedValue([
+      {
+        id: 'sale-uuid-1' as SaleId,
+        clientId: 'client-uuid-1' as ClientId,
+        vinylId: 'vinyl-uuid-1' as VinylId,
+        date: new Date('2025-01-01'),
+      },
+    ]),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -38,6 +52,10 @@ describe('CollectionService', () => {
         {
           provide: CollectionRepository,
           useValue: mockCollectionRepository,
+        },
+        {
+          provide: SaleService,
+          useValue: mockSaleService,
         },
       ],
     }).compile();
