@@ -23,6 +23,8 @@ export function ClientListItem({
 }: ClientListItemProps): React.JSX.Element {
   const [firstName, setFirstName] = useState<string>(client.firstName)
   const [lastName, setLastName] = useState<string>(client.lastName)
+  const [email, setEmail] = useState<string>(client.email ?? '')
+  const [photo, setPhoto] = useState<string>(client.photo ?? '')
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
 
@@ -30,10 +32,17 @@ export function ClientListItem({
     setIsEditing(false)
     setFirstName(client.firstName)
     setLastName(client.lastName)
+    setEmail(client.email ?? '')
+    setPhoto(client.photo ?? '')
   }
 
   function onValidateEdit(): void {
-    onUpdate(client.id, { firstName, lastName })
+    onUpdate(client.id, {
+      firstName,
+      lastName,
+      ...(email.length > 0 ? { email } : {}),
+      ...(photo.length > 0 ? { photo } : {}),
+    })
     setIsEditing(false)
   }
 
@@ -59,20 +68,38 @@ export function ClientListItem({
       >
         <Col span={14} style={{ margin: 'auto 0' }}>
           {isEditing ? (
-            <span style={{ display: 'flex', gap: '.5rem' }}>
+            <span
+              style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}
+            >
+              <span style={{ display: 'flex', gap: '.5rem' }}>
+                <Input
+                  value={firstName}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFirstName(e.target.value)
+                  }
+                  placeholder="Prénom"
+                />
+                <Input
+                  value={lastName}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setLastName(e.target.value)
+                  }
+                  placeholder="Nom"
+                />
+              </span>
               <Input
-                value={firstName}
+                value={email}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFirstName(e.target.value)
+                  setEmail(e.target.value)
                 }
-                placeholder="Prénom"
+                placeholder="Email (optionnel)"
               />
               <Input
-                value={lastName}
+                value={photo}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setLastName(e.target.value)
+                  setPhoto(e.target.value)
                 }
-                placeholder="Nom"
+                placeholder="URL photo (optionnel)"
               />
             </span>
           ) : (
