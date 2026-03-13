@@ -8,8 +8,8 @@ Deadline : 13 mars 2026.
 
 ## Stack
 
-| Côté    | Technologies                                                        |
-| --------- | ------------------------------------------------------------------- |
+| Côté      | Technologies                                                    |
+| --------- | --------------------------------------------------------------- |
 | Back-end  | TypeScript · NestJS · TypeORM · SQLite · API REST               |
 | Front-end | TypeScript · React · Vite · Ant Design · @tanstack/react-router |
 
@@ -82,7 +82,7 @@ docker compose up -d
 ```
 
 - Frontend : http://localhost:5173
-- Backend  : http://localhost:3000
+- Backend : http://localhost:3000
 
 ### 4. Résumé de la configuration Docker
 
@@ -145,24 +145,24 @@ npm run dev
 
 ## Variables d'environnement
 
-| Fichier            | Variable                  | Description                                        |
-| ------------------ | ------------------------- | -------------------------------------------------- |
+| Fichier          | Variable                | Description                                     |
+| ---------------- | ----------------------- | ----------------------------------------------- |
 | `react-app/.env` | `VITE_API_URL`          | URL du backend (défaut `http://localhost:3000`) |
-| `nest-api/.env`  | `SPOTIFY_CLIENT_ID`     | Client ID de l'app Spotify Developer               |
-| `nest-api/.env`  | `SPOTIFY_CLIENT_SECRET` | Client Secret de l'app Spotify Developer           |
+| `nest-api/.env`  | `SPOTIFY_CLIENT_ID`     | Client ID de l'app Spotify Developer            |
+| `nest-api/.env`  | `SPOTIFY_CLIENT_SECRET` | Client Secret de l'app Spotify Developer        |
 
 ---
 
 ## Qui a fait quoi
 
-| Fonctionnalité                                     | Développeur(s)                        |
-| --------------------------------------------------- | -------------------------------------- |
-| Mise en place de la stack (NestJS + React + Docker) | Maxence Gibaru                         |
-| Module Vinyles (CRUD back + front)                  | Maxime Demeulemeester                  |
-| Module Artistes (CRUD back + front)                 | Amira Hidaoui                          |
-| Module Clients (CRUD back + front)                  | Amira Hidaoui                          |
-| Module Ventes (CRUD back + front)                   | Maxime Demeulemeester                  |
-| Module Collections (CRUD + visibilité)             | Julien Debril                          |
-| Intégration Spotify                                | Maxence Gibaru                         |
-| Direction artistique (thème underground / néon)   | Julien Debril                          |
+| Fonctionnalité                                      | Développeur(s)                        |
+| --------------------------------------------------- | ------------------------------------- |
+| Mise en place de la stack (NestJS + React + Docker) | Maxence Gibaru                        |
+| Module Vinyles (CRUD back + front)                  | Maxime Demeulemeester                 |
+| Module Artistes (CRUD back + front)                 | Amira Hidaoui                         |
+| Module Clients (CRUD back + front)                  | Amira Hidaoui                         |
+| Module Ventes (CRUD back + front)                   | Maxime Demeulemeester                 |
+| Module Collections (CRUD + visibilité)              | Julien Debril                         |
+| Intégration Spotify                                 | Maxence Gibaru                        |
+| Direction artistique (thème underground / néon)     | Julien Debril                         |
 | Tests et corrections de bugs                        | Julien Debril · Maxime Demeulemeester |
