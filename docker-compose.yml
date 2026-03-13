@@ -3,6 +3,8 @@ services:
     build:
       context: ./nest-api
       dockerfile: Dockerfile
+    env_file:
+      - ./nest-api/.env
     ports:
       - "3000:3000"
     volumes:
